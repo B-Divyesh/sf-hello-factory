@@ -3,6 +3,7 @@ import { loadCatalog, card, byInterest, esc, KIND, KINDS, type Entry } from './l
 
 const q = new URLSearchParams(location.search);
 const state = { cat: q.get('cat'), kind: q.get('kind'), cls: q.get('class'), q: q.get('q') ?? '' };
+const focus = q.get('focus');
 function sync(): void { const u = new URLSearchParams(); if (state.cat) u.set('cat', state.cat); if (state.kind) u.set('kind', state.kind); if (state.cls) u.set('class', state.cls); if (state.q) u.set('q', state.q); history.replaceState(null, '', u.toString() ? `?${u}` : location.pathname); }
 function list(el: HTMLElement, items: [string, string, number][], key: 'cat' | 'kind' | 'cls'): void {
   el.innerHTML = [`<li><button type="button" data-v="" aria-pressed="${state[key] ? 'false' : 'true'}">All</button></li>`, ...items.map(([v, label, n]) => `<li><button type="button" data-v="${esc(v)}" aria-pressed="${state[key] === v}">${esc(label)} <b>${n}</b></button></li>`)].join('');
@@ -34,4 +35,5 @@ function render(): void {
   list(document.querySelector('#side-classes')!, [...byCls.entries()].sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, KIND[k] ?? k, n] as [string, string, number]), 'cls');
   const search = document.querySelector<HTMLInputElement>('#cat-search')!; search.value = state.q; search.addEventListener('input', () => { state.q = search.value; render(); });
   render();
+  if (focus) { const li = document.getElementById(`p-${focus}`); if (li) { li.classList.add('is-focus'); li.scrollIntoView({ block: 'center' }); li.querySelector<HTMLAnchorElement>('h3 a')?.focus(); } }
 })();

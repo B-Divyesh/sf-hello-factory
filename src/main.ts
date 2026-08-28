@@ -25,30 +25,40 @@ updateClock();
 window.setInterval(updateClock, 1000);
 
 
-/* ---- Landing: recommended picks, shelves, latest releases (data from /products.json + curation) ---- */
+/* ---- Landing: the showcase drum and the full picture ledger (data from /products.json + curation + shots) ---- */
 import { loadCatalog, card, byInterest, esc, KINDS, type Entry } from './ledger';
+import { mountDrum } from './showcase';
 async function renderLedger(): Promise<void> {
-  const featuredGrid = document.querySelector<HTMLOListElement>('#featured-grid');
-  const shelves = document.querySelector<HTMLElement>('#shelves');
-  const latestGrid = document.querySelector<HTMLOListElement>('#latest-grid');
-  const count = document.querySelector<HTMLElement>('#ledger-count');
-  const lede = document.querySelector<HTMLElement>('#ledger-lede');
-  const cat = await loadCatalog();
-  if (!cat || !featuredGrid || !shelves || !latestGrid) return;
+  const cat = await loadCatalog(); if (!cat) return;
   const all = cat.products;
   if (summary) summary.textContent = `${all.length} tools live on their own addresses.`;
-  if (count) count.textContent = `· ${all.length} tools`;
-  let featured = all.filter((e) => e.featured).sort(byInterest);
-  if (featured.length === 0) {
-    if (lede) lede.textContent = 'The editor has not rated this batch yet, so here are the most recent product-like releases. The full catalogue has everything.';
-    featured = all.filter((e) => e.kind === 'product' || e.kind === 'game').sort((a, b) => (b.released ?? '').localeCompare(a.released ?? '')).slice(0, 12);
+  // showcase: the editor's featured picks with a picture, else the most interesting product-like tools with a picture
+  const drumRoot = document.querySelector<HTMLElement>('#drum');
+  if (drumRoot) {
+    let picks = all.filter((e) => e.featured && e.image).sort(byInterest);
+    if (picks.length < 8) picks = picks.concat(all.filter((e) => e.image && !e.featured && (e.kind === 'product' || e.kind === 'game' || e.kind === 'installable')).sort(byInterest)).slice(0, 12);
+    mountDrum(drumRoot, picks.slice(0, 12));
   }
-  featuredGrid.innerHTML = featured.slice(0, 12).map((e) => card(e, { showWhy: true })).join('');
-  const groups = new Map<string, { title: string; blurb?: string; n: number }>();
-  if (cat.categories?.length) for (const c of cat.categories) groups.set(c.id, { title: c.title, blurb: c.blurb, n: 0 });
-  for (const e of all) { const id = e.category ?? e.kind ?? 'product'; if (!groups.has(id)) groups.set(id, { title: KINDS[id] ?? id, n: 0 }); groups.get(id)!.n++; }
-  shelves.innerHTML = [...groups.entries()].filter(([, g]) => g.n > 0).map(([id, g]) => `<a class="shelf" href="/catalog/?cat=${encodeURIComponent(id)}"><span class="shelf-count">${g.n}</span><strong>${esc(g.title)}</strong>${g.blurb ? `<span>${esc(g.blurb)}</span>` : ''}</a>`).join('');
-  const featuredSlugs = new Set(featured.map((e) => e.slug));
-  const latest: Entry[] = all.filter((e) => !featuredSlugs.has(e.slug) && (e.kind === 'product' || e.kind === 'game' || e.kind === 'installable')).sort((a, b) => (b.released ?? '').localeCompare(a.released ?? '') || byInterest(a, b)).slice(0, 6);
-  latestGrid.innerHTML = latest.map((e) => card(e, { showWhy: true })).join('');
+  // bottom catalogue: everything, pictures, shelf filters, search, 48 first
+  const grid = document.querySelector<HTMLOListElement>('#ledger-grid'); const filters = document.querySelector<HTMLElement>('#ledger-filters');
+  const search = document.querySelector<HTMLInputElement>('#ledger-search'); const count = document.querySelector<HTMLElement>('#ledger-count'); const more = document.querySelector<HTMLButtonElement>('#ledger-more');
+  if (!grid || !filters || !search || !count) return;
+  const cats = new Map<string, string>(); if (cat.categories?.length) for (const c of cat.categories) cats.set(c.id, c.title);
+  const nCat = new Map<string, number>(); for (const e of all) { const id = e.category ?? e.kind ?? 'product'; nCat.set(id, (nCat.get(id) ?? 0) + 1); if (!cats.has(id)) cats.set(id, KINDS[id] ?? id); }
+  let shelf: string | null = null; let showAll = false; const PAGE = 48;
+  filters.innerHTML = [...cats.entries()].filter(([id]) => nCat.get(id)).map(([id, t]) => `<button type="button" data-f="${esc(id)}" aria-pressed="false">${esc(t)} <b>${nCat.get(id)}</b></button>`).join('');
+  const sorted = [...all].sort((a, b) => (a.state === 'VERIFYING' ? -1 : 0) - (b.state === 'VERIFYING' ? -1 : 0) || byInterest(a, b));
+  grid.innerHTML = sorted.map((e) => card(e, { showWhy: true })).join('');
+  const items = [...grid.querySelectorAll<HTMLLIElement>('li')];
+  const apply = (): void => {
+    const q = search.value.trim().toLowerCase(); const filtering = Boolean(q || shelf); let matched = 0, shown = 0;
+    for (const li of items) { const ok = (!q || (li.dataset.search ?? '').includes(q)) && (!shelf || li.dataset.cat === shelf); if (ok) matched++; const vis = ok && (filtering || showAll || matched <= PAGE); li.hidden = !vis; if (vis) shown++; }
+    count.textContent = shown === all.length ? `${all.length} tools` : `${shown} of ${matched} matching · ${all.length} tools`;
+    if (more) { more.hidden = filtering || showAll || matched <= PAGE; more.textContent = `Show all ${matched} tools`; }
+    filters.querySelectorAll<HTMLButtonElement>('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.f === shelf)));
+  };
+  more?.addEventListener('click', () => { showAll = true; apply(); });
+  search.addEventListener('input', apply);
+  filters.addEventListener('click', (ev) => { const b = (ev.target as HTMLElement).closest('button'); if (!b) return; shelf = shelf === b.dataset.f ? null : (b.dataset.f ?? null); apply(); });
+  apply();
 }

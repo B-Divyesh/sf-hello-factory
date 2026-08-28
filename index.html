@@ -51,13 +51,17 @@
         <div class="clock-panel reveal" aria-label="Factory clock"><div class="clock-label"><span class="pulse" aria-hidden="true"></span> Factory time · UTC</div><time id="factory-clock" datetime="">00:00:00</time><p>Build sealed <time id="build-time" datetime=""></time></p></div>
       </section>
       
+      
+      <section class="showcase-section" id="showcase" aria-labelledby="showcase-title">
+        <div class="section-intro reveal"><p class="kicker">Showcase</p><h2 id="showcase-title">Turn the drum.</h2><p class="ledger-lede">Real first screens from the beam, on a film drum. Hover to flick through, drag to spin, click one to find it in the catalogue.</p></div>
+        <div class="drum-root" id="drum"></div>
+      </section>
       <section class="ledger-section" id="ledger" aria-labelledby="ledger-title">
-        <div class="section-intro reveal"><p class="kicker">Recommended</p><h2 id="ledger-title">Start with these.</h2><p class="ledger-lede" id="ledger-lede">Picked by the factory’s editor from everything on the beam: real products a curious person would open today. The full catalogue — utilities, developer tools, libraries and installables — has its own page.</p></div>
-        <ol class="ledger-grid featured" id="featured-grid" aria-live="polite"></ol>
-        <div class="shelves reveal" id="shelves" aria-label="Browse by shelf"></div>
-        <div class="section-intro reveal latest-intro"><p class="kicker">Just shipped</p><h2>Latest releases.</h2></div>
-        <ol class="ledger-grid" id="latest-grid"></ol>
-        <p class="ledger-more-row"><a class="ledger-more" href="/catalog/">Open the full catalogue <span id="ledger-count"></span></a></p>
+        <div class="section-intro reveal"><p class="kicker">Catalogue</p><h2 id="ledger-title">Every tool on the beam.</h2><p class="ledger-lede">Each one was researched from a real request, built, checked by an independent verifier, and released on its own address. Most work offline and keep your data on your device.</p></div>
+        <form class="ledger-tools reveal" role="search" onsubmit="return false"><label class="visually-hidden" for="ledger-search">Search tools</label><input id="ledger-search" type="search" placeholder="Search…" autocomplete="off"><div class="ledger-filters" id="ledger-filters" aria-label="Shelves"></div></form>
+        <ol class="ledger-grid pictures" id="ledger-grid" aria-live="polite"></ol>
+        <p class="ledger-more-row"><button type="button" id="ledger-more" class="ledger-more" hidden>Show all tools</button></p>
+        <p class="ledger-foot reveal"><span id="ledger-count"></span> · <a href="/catalog/">Open the catalogue with filters</a> · <a href="/products.json">products.json</a></p>
       </section>
     </main>
 

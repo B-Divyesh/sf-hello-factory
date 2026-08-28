@@ -50,6 +50,12 @@
         <div class="beam-copy reveal"><p class="kicker">Live from the floor</p><h2 id="beam-title">The beam is on.</h2><p id="product-summary">Loading the release ledger…</p></div>
         <div class="clock-panel reveal" aria-label="Factory clock"><div class="clock-label"><span class="pulse" aria-hidden="true"></span> Factory time · UTC</div><time id="factory-clock" datetime="">00:00:00</time><p>Build sealed <time id="build-time" datetime=""></time></p></div>
       </section>
+      <section class="ledger-section" id="ledger" aria-labelledby="ledger-title">
+        <div class="section-intro reveal"><p class="kicker">Release ledger</p><h2 id="ledger-title">Every tool on the beam.</h2><p class="ledger-lede">Each one was researched from a real request, built, checked by an independent verifier and released on its own address. Most work offline and keep your data on your device.</p></div>
+        <form class="ledger-tools reveal" role="search" aria-label="Find a tool" onsubmit="return false"><label class="visually-hidden" for="ledger-search">Search tools</label><input id="ledger-search" type="search" placeholder="Search by name or job…" autocomplete="off"><div class="ledger-filters" id="ledger-filters" aria-label="Filter by kind"></div></form>
+        <ol class="ledger-grid" id="ledger-grid" aria-live="polite"></ol>
+        <p class="ledger-foot reveal"><span id="ledger-count"></span> · <a href="/products.json">products.json</a></p>
+      </section>
     </main>
 
     <footer>

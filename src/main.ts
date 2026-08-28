@@ -44,7 +44,8 @@ async function renderLedger(): Promise<void> {
   const search = document.querySelector<HTMLInputElement>('#ledger-search'); const count = document.querySelector<HTMLElement>('#ledger-count'); const more = document.querySelector<HTMLButtonElement>('#ledger-more');
   if (!grid || !filters || !search || !count) return;
   const cats = new Map<string, string>(); if (cat.categories?.length) for (const c of cat.categories) cats.set(c.id, c.title);
-  const nCat = new Map<string, number>(); for (const e of all) { const id = e.category ?? e.kind ?? 'product'; nCat.set(id, (nCat.get(id) ?? 0) + 1); if (!cats.has(id)) cats.set(id, KINDS[id] ?? id); }
+  const curated = cats.size > 0;
+  const nCat = new Map<string, number>(); for (const e of all) { let id = e.category ?? e.kind ?? 'product'; if (curated && !cats.has(id)) { id = 'new'; e.category = 'new'; } nCat.set(id, (nCat.get(id) ?? 0) + 1); if (!cats.has(id)) cats.set(id, id === 'new' ? 'New, not yet shelved' : (KINDS[id] ?? id)); }
   let shelf: string | null = null; let showAll = false; const PAGE = 48;
   filters.innerHTML = [...cats.entries()].filter(([id]) => nCat.get(id)).map(([id, t]) => `<button type="button" data-f="${esc(id)}" aria-pressed="false">${esc(t)} <b>${nCat.get(id)}</b></button>`).join('');
   const sorted = [...all].sort((a, b) => (a.state === 'VERIFYING' ? -1 : 0) - (b.state === 'VERIFYING' ? -1 : 0) || byInterest(a, b));

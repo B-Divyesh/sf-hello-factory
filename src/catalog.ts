@@ -27,7 +27,8 @@ function render(): void {
   const cat = await loadCatalog(); if (!cat) return;
   entries = cat.products;
   if (cat.categories?.length) for (const c of cat.categories) cats.set(c.id, c);
-  for (const e of entries) if (e.category && !cats.has(e.category)) cats.set(e.category, { title: KINDS[e.category] ?? e.category });
+  const curated = cats.size > 0;
+  for (const e of entries) { if (curated && e.category && !cats.has(e.category)) e.category = 'new'; if (e.category && !cats.has(e.category)) cats.set(e.category, { title: e.category === 'new' ? 'New, not yet shelved' : (KINDS[e.category] ?? e.category) }); }
   const cnt = (f: (e: Entry) => string | undefined) => { const m = new Map<string, number>(); for (const e of entries) { const k = f(e); if (k) m.set(k, (m.get(k) ?? 0) + 1); } return m; };
   const byCat = cnt((e) => e.category), byKind = cnt((e) => e.kind), byCls = cnt((e) => e.class);
   list(document.querySelector('#side-cats')!, [...cats.entries()].filter(([id]) => byCat.get(id)).map(([id, c]) => [id, c.title, byCat.get(id) ?? 0] as [string, string, number]), 'cat');

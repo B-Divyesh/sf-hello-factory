@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Browse every tool the factory has shipped: products, utilities, games, developer tools, libraries and installables — filter by shelf, kind and search." />
+    <meta name="description" content="Browse every tool the factory has shipped: products, utilities, games, developer tools, libraries and installables — filter by category, kind and search." />
     <meta name="theme-color" content="#f3eee4" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href="https://hello-factory.sociobot.in/" />
-    <title>Catalogue — every tool on the beam · Hello Factory</title>
+    <title>Catalogue — all tools · Hello Factory</title>
   <script type="module" src="/src/catalog.ts"></script></head>
 <body class="catalog-body">
   <a class="skip-link" href="#main">Skip to the catalogue</a>
   <header class="site-header">
       <a class="wordmark" href="#top" aria-label="Hello Factory, home"><span class="wordmark-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Hello Factory</span></a>
-      <nav aria-label="Primary navigation"><a href="#loop">How it works</a><a href="#on-the-beam">On the beam</a></nav>
+      <nav aria-label="Primary navigation"><a href="/#loop">How it works</a><a href="/#on-the-beam">Live now</a></nav>
     </header>
   <main id="main" class="catalog-main">
     <aside class="catalog-side" aria-label="Filters">
       <p class="kicker">Catalogue</p>
-      <h1>Every tool on the beam.</h1>
+      <h1>All tools.</h1>
       <form role="search" onsubmit="return false"><label class="visually-hidden" for="cat-search">Search</label><input id="cat-search" type="search" placeholder="Search, or describe your problem…" autocomplete="off"></form>
-      <nav aria-label="Shelves"><h2>Shelves</h2><ul id="side-cats"></ul></nav>
+      <nav aria-label="Categories"><h2>Category</h2><ul id="side-cats"></ul></nav>
       <nav aria-label="What it is"><h2>What it is</h2><ul id="side-kinds"></ul></nav>
       <nav aria-label="Type"><h2>Type</h2><ul id="side-classes"></ul></nav>
-      <p class="side-foot"><a href="/">← Back to the beam</a> · <a href="/products.json">products.json</a></p>
+      <p class="side-foot"><a href="/">← Back to Hello Factory</a> · <a href="/products.json">products.json</a></p>
     </aside>
     <section class="catalog-content" aria-labelledby="cat-title">
       <div class="catalog-head"><h2 id="cat-title">All tools</h2><p id="cat-blurb" class="ledger-lede"></p><p id="cat-count" class="ledger-foot"></p></div>

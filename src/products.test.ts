@@ -8,6 +8,6 @@ describe('formatProductSummary', () => {
   });
 
   it('handles an empty fleet honestly', () => {
-    expect(formatProductSummary([])).toBe('No tools are on the beam yet.');
+    expect(formatProductSummary([])).toBe('No tools released yet.');
   });
 });

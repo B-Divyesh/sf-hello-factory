@@ -6,6 +6,6 @@ export const products: Product[] = [
 
 export function formatProductSummary(items: Product[]): string {
   const liveCount = items.filter(({ state }) => state === 'live').length;
-  if (items.length === 0) return 'No tools are on the beam yet.';
+  if (items.length === 0) return 'No tools released yet.';
   return `${liveCount} ${liveCount === 1 ? 'tool' : 'tools'} live · ${items.length} tracked`;
 }

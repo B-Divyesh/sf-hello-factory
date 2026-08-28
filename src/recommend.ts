@@ -20,7 +20,7 @@ export function mountGuide(form: HTMLFormElement, input: HTMLInputElement, host:
       if (!res.ok) throw new Error('The guide is not available right now.');
       const data = (await res.json()) as { picks: { slug: string; why: string }[]; note?: string };
       const picks = data.picks.map((p) => ({ e: bySlug.get(p.slug), why: p.why })).filter((p) => p.e) as { e: Entry; why: string }[];
-      panel.innerHTML = `<p class="kicker">The guide</p><h3>${picks.length ? `${picks.length} tool${picks.length > 1 ? 's' : ''} for “${esc(q)}”` : 'Nothing on the beam fits that yet'}</h3>
+      panel.innerHTML = `<p class="kicker">The guide</p><h3>${picks.length ? `${picks.length} tool${picks.length > 1 ? 's' : ''} for “${esc(q)}”` : 'Nothing in the catalogue fits that well yet'}</h3>
         ${data.note ? `<p class="ledger-lede">${esc(data.note)}</p>` : ''}
         <ol class="ledger-grid pictures guide-grid">${picks.map((p) => card({ ...p.e, why: p.why, interest: p.e.interest }, { showWhy: true })).join('')}</ol>
         <p class="ledger-foot"><button type="button" class="guide-close">Close</button> · picked by a model from the catalogue; it can be wrong — the plain search is below.</p>`;

@@ -21,7 +21,7 @@ function render(): void {
   blurb.textContent = c?.blurb ?? '';
   count.textContent = `${shown.length} of ${entries.length} tools${s ? ` · “${state.q}”` : ''}`;
   grid.innerHTML = shown.map((e) => card(e, { showWhy: true })).join(''); empty.hidden = shown.length > 0;
-  document.querySelectorAll<HTMLButtonElement>('.catalog-side button').forEach((b) => { const ul = b.closest('ul')!; const key = ul.id === 'side-cats' ? 'cat' : ul.id === 'side-kinds' ? 'kind' : 'cls'; b.setAttribute('aria-pressed', String((state[key] ?? '') === (b.dataset.v ?? ''))); });
+  document.querySelectorAll<HTMLButtonElement>('.catalog-side ul button').forEach((b) => { const ul = b.closest('ul'); if (!ul) return; const key = ul.id === 'side-cats' ? 'cat' : ul.id === 'side-kinds' ? 'kind' : 'cls'; b.setAttribute('aria-pressed', String((state[key] ?? '') === (b.dataset.v ?? ''))); });
   document.title = `${title.textContent} — Catalogue · Hello Factory`;
 }
 (async () => {

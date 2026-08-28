@@ -125,3 +125,7 @@ footer p { margin: 0; }
 .ledger-empty { padding: 40px 0; color: var(--muted); font-family: Georgia, serif; font-size: 1.4rem; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (max-width: 640px) { .ledger-grid { grid-template-columns: 1fr; } }
+.ledger-more-row { margin: 28px 0 0; }
+.ledger-more { min-height: 48px; padding: 0 0 6px; border: 0; border-bottom: 2px solid var(--ink); background: transparent; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; cursor: pointer; }
+.ledger-more:hover { color: var(--coral-dark); border-color: var(--coral-dark); }
+.ledger-more:focus-visible { outline: 3px solid var(--coral-dark); outline-offset: 6px; border-radius: 2px; }

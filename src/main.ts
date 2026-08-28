@@ -54,13 +54,24 @@ async function renderLedger(): Promise<void> {
     <span class="address">${esc(e.url.replace('https://', ''))}</span>
   </li>`).join('');
   const items = [...grid.querySelectorAll<HTMLLIElement>('li')];
+  const PAGE = 48;
+  let showAll = false;
+  const more = document.querySelector<HTMLButtonElement>('#ledger-more');
   const apply = (): void => {
     const q = search.value.trim().toLowerCase();
-    let shown = 0;
-    for (const li of items) { const ok = (!q || (li.dataset.search ?? '').includes(q)) && (!kind || li.dataset.kind === kind); li.hidden = !ok; if (ok) shown++; }
-    count.textContent = shown === entries.length ? `${entries.length} tools` : `${shown} of ${entries.length} tools`;
+    const filtering = Boolean(q || kind);
+    let matched = 0; let shown = 0;
+    for (const li of items) {
+      const ok = (!q || (li.dataset.search ?? '').includes(q)) && (!kind || li.dataset.kind === kind);
+      if (ok) matched++;
+      const visible = ok && (filtering || showAll || matched <= PAGE);
+      li.hidden = !visible; if (visible) shown++;
+    }
+    count.textContent = shown === entries.length ? `${entries.length} tools` : `${shown} of ${matched} matching · ${entries.length} tools`;
+    if (more) { more.hidden = filtering || showAll || matched <= PAGE; more.textContent = `Show all ${matched} tools`; }
     filters.querySelectorAll<HTMLButtonElement>('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.kind === kind)));
   };
+  more?.addEventListener('click', () => { showAll = true; apply(); more.blur(); items.find((li) => !li.hidden && items.indexOf(li) >= PAGE)?.querySelector('a')?.focus(); });
   search.addEventListener('input', apply);
   filters.addEventListener('click', (ev) => { const b = (ev.target as HTMLElement).closest('button'); if (!b) return; kind = kind === b.dataset.kind ? null : (b.dataset.kind ?? null); apply(); });
   apply();

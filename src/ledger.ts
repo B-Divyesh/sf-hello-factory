@@ -26,7 +26,6 @@ export function card(e: Entry, opts: { showWhy?: boolean } = {}): string {
     <div class="ledger-meta"><span>${esc(KIND[e.class] ?? e.class)}</span>${e.paid ? '<span class="paid">paid tier</span>' : ''}${e.state === 'VERIFYING' ? '<span class="fresh">just shipped</span>' : ''}${e.interest && e.interest >= 5 ? '<span class="star">editor’s pick</span>' : ''}</div>
     <h3><a href="${esc(e.url)}">${esc(e.title)}</a></h3>
     <p>${esc(line)}</p>
-    ${e.reason && opts.showWhy ? `<p class="reason">${esc(e.reason)}</p>` : ''}
     <span class="address">${esc(e.url.replace('https://', ''))}</span>
   </li>`;
 }

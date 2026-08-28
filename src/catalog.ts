@@ -1,5 +1,6 @@
 import './style.css';
 import { loadCatalog, card, byInterest, esc, KIND, KINDS, type Entry } from './ledger';
+import { mountGuide } from './recommend';
 
 const q = new URLSearchParams(location.search);
 const state = { cat: q.get('cat'), kind: q.get('kind'), cls: q.get('class'), q: q.get('q') ?? '' };
@@ -35,6 +36,7 @@ function render(): void {
   list(document.querySelector('#side-kinds')!, [...byKind.entries()].sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, KINDS[k] ?? k, n] as [string, string, number]), 'kind');
   list(document.querySelector('#side-classes')!, [...byCls.entries()].sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, KIND[k] ?? k, n] as [string, string, number]), 'cls');
   const search = document.querySelector<HTMLInputElement>('#cat-search')!; search.value = state.q; search.addEventListener('input', () => { state.q = search.value; render(); });
+  mountGuide(search.closest('form') as HTMLFormElement, search, document.querySelector('#cat-grid')!, entries);
   render();
   if (focus) { const li = document.getElementById(`p-${focus}`); if (li) { li.classList.add('is-focus'); li.scrollIntoView({ block: 'center' }); li.querySelector<HTMLAnchorElement>('h3 a')?.focus(); } }
 })();

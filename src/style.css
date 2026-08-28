@@ -201,3 +201,15 @@ a.ledger-more { display: inline-block; text-decoration: none; }
   .drum-cap { opacity: 1; }
   .drum-nav { display: none; }
 }
+
+/* Ask the guide */
+.guide-btn { min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--white); font: 600 .9rem Inter, system-ui, sans-serif; cursor: pointer; }
+.guide-btn:hover { background: var(--coral-dark); border-color: var(--coral-dark); }
+.guide-btn:disabled { opacity: .6; cursor: progress; }
+.guide-btn:focus-visible { outline: 3px solid var(--coral-dark); outline-offset: 3px; }
+.guide-panel { margin: 0 0 40px; padding: 24px 0 8px; border-top: 2px solid var(--coral-dark); }
+.guide-panel h3 { margin: 4px 0 8px; font-family: Georgia, "Times New Roman", serif; font-size: 1.8rem; font-weight: 400; }
+.guide-status { color: var(--muted); font-family: Georgia, serif; font-size: 1.2rem; }
+.guide-grid { border-top: 0; }
+.guide-close { font: inherit; padding: 0; border: 0; background: none; color: var(--ink); text-decoration: underline; cursor: pointer; }
+.catalog-side .guide-btn { width: 100%; margin-top: 10px; }

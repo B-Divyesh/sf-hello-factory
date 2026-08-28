@@ -28,6 +28,7 @@ window.setInterval(updateClock, 1000);
 /* ---- Landing: the showcase drum and the full picture ledger (data from /products.json + curation + shots) ---- */
 import { loadCatalog, card, byInterest, esc, KINDS, type Entry } from './ledger';
 import { mountDrum } from './showcase';
+import { mountGuide } from './recommend';
 async function renderLedger(): Promise<void> {
   const cat = await loadCatalog(); if (!cat) return;
   const all = cat.products;
@@ -59,6 +60,7 @@ async function renderLedger(): Promise<void> {
     filters.querySelectorAll<HTMLButtonElement>('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.f === shelf)));
   };
   more?.addEventListener('click', () => { showAll = true; apply(); });
+  mountGuide(search.closest('form') as HTMLFormElement, search, grid, all);
   search.addEventListener('input', apply);
   filters.addEventListener('click', (ev) => { const b = (ev.target as HTMLElement).closest('button'); if (!b) return; shelf = shelf === b.dataset.f ? null : (b.dataset.f ?? null); apply(); });
   apply();

@@ -9,8 +9,8 @@ export function mountDrum(root: HTMLElement, items: Entry[]): void {
       <ul class="drum">${items.map((e, i) => `<li class="drum-card" style="--i:${i}"><a href="/catalog/?focus=${encodeURIComponent(e.slug)}" aria-label="${esc(e.title)} — open in the catalogue">
         ${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async">` : `<span class="shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}
         <span class="drum-cap"><strong>${esc(e.title)}</strong><span>${esc(e.why || KIND[e.class] || '')}</span></span></a></li>`).join('')}</ul>
-      <div class="drum-nav"><button type="button" class="drum-btn" data-dir="-1" aria-label="Previous">←</button><span class="drum-count" aria-live="polite"></span><button type="button" class="drum-btn" data-dir="1" aria-label="Next">→</button></div>
-    </div>`;
+    </div>
+    <div class="drum-nav"><button type="button" class="drum-btn" data-dir="-1" aria-label="Previous">←</button><span class="drum-count" aria-live="polite"></span><button type="button" class="drum-btn" data-dir="1" aria-label="Next">→</button></div>`;
   const stage = root.querySelector<HTMLElement>('.drum-stage')!; const drum = root.querySelector<HTMLElement>('.drum')!;
   const cards = [...root.querySelectorAll<HTMLElement>('.drum-card')]; const count = root.querySelector<HTMLElement>('.drum-count')!;
   const step = 360 / n; let radius = 0;

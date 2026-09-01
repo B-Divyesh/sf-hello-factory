@@ -3,72 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Meet Param Factory, an autonomous software factory that ships small, useful tools." />
+    <meta name="description" content="Hello Factory: small useful software from an autonomous factory. Describe what you need and the guide picks a tool, or browse the catalogue by shelf." />
     <meta name="theme-color" content="#f3eee4" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href="https://hello-factory.sociobot.in/" />
-    <title>Hello Factory — Small useful software, shipped</title>
+    <title>Hello Factory — small useful software, each tool on its own address</title>
   </head>
-  <body>
+  <body class="home-body">
     <a class="skip-link" href="#main">Skip to main content</a>
     <header class="site-header">
-      <a class="wordmark" href="#top" aria-label="Hello Factory, home"><span class="wordmark-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Hello Factory</span></a>
-      <nav aria-label="Primary navigation"><a href="#loop">How it works</a><a href="#on-the-beam">Live now</a></nav>
+      <a class="wordmark" href="/" aria-label="Hello Factory, home"><span class="wordmark-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Hello Factory</span></a>
+      <nav aria-label="Primary navigation"><a href="/" aria-current="page">Home</a><a href="/catalog/">Catalogue</a><a href="/catalog/?kind=game">Games</a><a href="/catalog/?sort=new">New</a><a href="#how">How it works</a></nav>
     </header>
 
     <main id="main">
-      <section class="hero" id="top" aria-labelledby="hero-title">
-        <div class="hero-copy reveal">
-          <p class="eyebrow"><span aria-hidden="true"></span> Param Factory / autonomous software studio</p>
-          <h1 id="hero-title">Small, useful software—found, made, and launched.</h1>
-          <p class="lede">Param Factory researches real needs, builds one focused tool for each, checks it, and releases it on its own <strong>*.sociobot.in</strong> address.</p>
-          <a class="primary-link" href="#loop">How it works <span aria-hidden="true">↓</span></a>
+      <section class="store-hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="kicker">Hello Factory</p>
+          <h1 id="hero-title">Small useful software, each tool on its own address.</h1>
+          <p class="lede" id="hero-count">Loading the catalogue…</p>
+          <form id="guide-form" class="guide-form" role="search" onsubmit="return false">
+            <label class="visually-hidden" for="guide-input">Describe what you need</label>
+            <input id="guide-input" type="search" placeholder="Describe what you need — e.g. split a restaurant bill without an account" autocomplete="off" />
+          </form>
+          <p class="hero-links"><a href="/catalog/">Browse the whole catalogue<span aria-hidden="true"> →</span></a><span id="updated" class="updated"></span></p>
         </div>
-        <figure class="hero-visual reveal">
-          <picture>
-            <source media="(max-width: 640px)" srcset="/assets/hero-lighthouse-768.webp" type="image/webp" />
-            <img src="/assets/hero-lighthouse-1280.webp" srcset="/assets/hero-lighthouse-768.webp 768w, /assets/hero-lighthouse-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 52vw" width="1280" height="853" alt="A lighthouse built from glowing browser windows stands in a calm dawn sea." fetchpriority="high" decoding="async" />
-          </picture>
-          <figcaption><span>Rule</span> Every tool must do one real job well before it is released.</figcaption>
-        </figure>
+        <div class="hero-feature" id="hero-feature" aria-label="Today's pick"></div>
+      </section>
+      <div id="guide-results" class="guide-host"></div>
+
+      <section class="featured-section" aria-labelledby="featured-title">
+        <div class="section-head"><h2 id="featured-title">Featured</h2><p>Picked by the curator for doing a real job well. Every picture is the tool's own first screen.</p></div>
+        <div class="feature-grid" id="featured-grid"></div>
       </section>
 
-      <section class="manifesto reveal" aria-label="What every release comes with"><p>Every release has a written brief, a test run, an independent verifier report and its own live address.</p><p>Nothing is listed on a demo alone.</p></section>
-
-      <section class="loop-section" id="loop" aria-labelledby="loop-title">
-        <div class="section-intro reveal"><p class="kicker">The factory loop</p><h2 id="loop-title">Five steps.<br />Each leaves evidence for the next.</h2><p>A tool moves to the next step only when the previous one has proof: a brief, a test run, a verifier report, a live address.</p></div>
-        <ol class="loop-list">
-          <li class="reveal"><span class="step-number">01</span><div><h3>Research</h3><p>Find a specific frustration people already feel.</p></div><span class="step-mark" aria-hidden="true">⌁</span></li>
-          <li class="reveal"><span class="step-number">02</span><div><h3>Design</h3><p>Shape the smallest complete answer.</p></div><span class="step-mark" aria-hidden="true">◇</span></li>
-          <li class="reveal"><span class="step-number">03</span><div><h3>Build</h3><p>Build the tool: fast, tested, and working offline where it can.</p></div><span class="step-mark" aria-hidden="true">⌘</span></li>
-          <li class="reveal"><span class="step-number">04</span><div><h3>Verify</h3><p>Test the real journey, rough edges included.</p></div><span class="step-mark" aria-hidden="true">✓</span></li>
-          <li class="reveal"><span class="step-number">05</span><div><h3>Launch</h3><p>Put a useful thing on the public internet.</p></div><span class="step-mark" aria-hidden="true">↗</span></li>
-        </ol>
-      </section>
-
-      <section class="beam-section" id="on-the-beam" aria-labelledby="beam-title">
-        <div class="beam-copy reveal"><p class="kicker">Live now</p><h2 id="beam-title">Released so far.</h2><p id="product-summary">Loading the release ledger…</p></div>
-        <div class="clock-panel reveal" aria-label="Factory clock"><div class="clock-label"><span class="pulse" aria-hidden="true"></span> Time · UTC</div><time id="factory-clock" datetime="">00:00:00</time><p>Site built <time id="build-time" datetime=""></time></p></div>
-      </section>
-      
-      
-      <section class="showcase-section" id="showcase" aria-labelledby="showcase-title">
-        <div class="section-intro reveal"><p class="kicker">Featured</p><h2 id="showcase-title">Twelve tools worth a look.</h2><p class="ledger-lede">Picked from the catalogue for being genuinely useful. Each card is the tool's real first screen. Hover or drag to browse; click one to open it in the catalogue.</p></div>
+      <section class="showcase-section" aria-labelledby="drum-title">
+        <div class="section-head"><h2 id="drum-title">Turn the drum</h2><p>Twelve real first screens. Hover to flick through, drag to spin, click one to open its page.</p></div>
         <div class="drum-root" id="drum"></div>
       </section>
-      <section class="ledger-section" id="ledger" aria-labelledby="ledger-title">
-        <div class="section-intro reveal"><p class="kicker">Catalogue</p><h2 id="ledger-title">All tools.</h2><p class="ledger-lede">Each one was researched from a real request, built, checked by an independent verifier, and released on its own address. Most work offline and keep your data on your device.</p></div>
-        <form class="ledger-tools reveal" role="search" onsubmit="return false"><label class="visually-hidden" for="ledger-search">Search tools</label><input id="ledger-search" type="search" placeholder="Search, or describe your problem and ask the guide…" autocomplete="off"><div class="ledger-filters" id="ledger-filters" aria-label="Shelves"></div></form>
-        <ol class="ledger-grid pictures" id="ledger-grid" aria-live="polite"></ol>
-        <p class="ledger-more-row"><button type="button" id="ledger-more" class="ledger-more" hidden>Show all tools</button></p>
-        <p class="ledger-foot reveal"><span id="ledger-count"></span> · <a href="/catalog/">Open the catalogue with filters</a> · <a href="/products.json">products.json</a></p>
+
+      <div id="shelves" class="shelves-root" aria-label="Shelves"></div>
+
+      <section class="how" id="how" aria-labelledby="how-title">
+        <div class="section-head"><h2 id="how-title">How a tool gets here</h2><p>A tool moves to the next step only when the previous one has left evidence.</p></div>
+        <ol class="steps">
+          <li><b>01</b><h3>Research</h3><p>A specific request people already make, with the sources recorded.</p></li>
+          <li><b>02</b><h3>Design</h3><p>The smallest complete answer, written down before any code.</p></li>
+          <li><b>03</b><h3>Build</h3><p>Fast, tested, and working offline where it can.</p></li>
+          <li><b>04</b><h3>Verify</h3><p>An independent run of the real journey, rough edges included.</p></li>
+          <li><b>05</b><h3>Release</h3><p>Its own address under sociobot.in, listed here with its first screen.</p></li>
+        </ol>
+        <div class="counts" id="counts" aria-label="Catalogue counts"></div>
       </section>
     </main>
 
     <footer>
-      <div><span class="footer-mark" aria-hidden="true">PF—26</span><p>Autonomous software,<br />made in the open.</p></div>
-      <p class="footer-meta">© 2026 Sociobot · <a href="https://github.com/B-Divyesh/sf-hello-factory/blob/main/LICENSE">MIT License</a><br />Hero imagery generated with the factory image model.</p>
+      <p><a href="/">Hello Factory</a> · <a href="/catalog/">Catalogue</a> · <a href="/products.json">products.json</a></p>
+      <p class="footer-meta">© 2026 Sociobot · <a href="https://github.com/B-Divyesh/sf-hello-factory/blob/main/LICENSE">MIT License</a> · Pictures are the tools' real first screens, captured by the factory.</p>
     </footer>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/home.ts"></script>
   </body>
 </html>

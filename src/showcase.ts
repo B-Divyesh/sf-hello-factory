@@ -6,7 +6,7 @@ export function mountDrum(root: HTMLElement, items: Entry[]): void {
   const n = items.length; if (n < 3) { root.hidden = true; return; }
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   root.innerHTML = `<div class="drum-stage" tabindex="0" aria-roledescription="carousel" aria-label="Showcase of ${n} tools">
-      <ul class="drum">${items.map((e, i) => `<li class="drum-card" style="--i:${i}"><a href="/catalog/?focus=${encodeURIComponent(e.slug)}" aria-label="${esc(e.title)} — open in the catalogue">
+      <ul class="drum">${items.map((e, i) => `<li class="drum-card" style="--i:${i}"><a href="/p/${encodeURIComponent(e.slug)}" aria-label="${esc(e.title)} — open its page">
         ${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async">` : `<span class="shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}
         <span class="drum-cap"><strong>${esc(e.title)}</strong><span>${esc(e.why || KIND[e.class] || '')}</span></span></a></li>`).join('')}</ul>
     </div>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="One tool from the Hello Factory catalogue: what it does, who it is for, how it was checked, and its live address." />
+    <meta name="theme-color" content="#f3eee4" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://hello-factory.sociobot.in/catalog/" />
+    <title>Tool — Hello Factory</title>
+    <script type="module" src="/src/product.ts"></script>
+  </head>
+  <body class="product-body">
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Hello Factory, home"><span class="wordmark-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Hello Factory</span></a>
+      <nav aria-label="Primary navigation"><a href="/">Home</a><a href="/catalog/">Catalogue</a><a href="/catalog/?kind=game">Games</a><a href="/catalog/?sort=new">New</a><a href="/#how">How it works</a></nav>
+      <form class="header-search" action="/catalog/" method="get" role="search"><label class="visually-hidden" for="hdr-search">Search the catalogue</label><input id="hdr-search" name="q" type="search" placeholder="Search the catalogue" autocomplete="off" /></form>
+    </header>
+    <main id="main" class="product-main">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">›</span><a href="/catalog/">Catalogue</a><span aria-hidden="true">›</span><a id="crumb-cat" href="/catalog/">Shelf</a><span aria-hidden="true">›</span><span id="crumb-self" aria-current="page">…</span></nav>
+      <article class="product" id="product"><p class="loading">Loading…</p></article>
+      <div id="more" class="shelves-root" aria-label="More tools"></div>
+    </main>
+    <footer>
+      <p><a href="/">Hello Factory</a> · <a href="/catalog/">Catalogue</a> · <a href="/products.json">products.json</a></p>
+      <p class="footer-meta">© 2026 Sociobot · <a href="https://github.com/B-Divyesh/sf-hello-factory/blob/main/LICENSE">MIT License</a> · Pictures are the tools' real first screens, captured by the factory.</p>
+    </footer>
+  </body>
+</html>

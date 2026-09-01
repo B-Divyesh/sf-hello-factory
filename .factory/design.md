@@ -2,45 +2,28 @@
 
 ## Direction
 
-**Surreal editorial: a dawn signal station.** The factory is presented as a lighthouse rather than a robot or assembly line: it finds a real need, maintains a disciplined beam, and releases small navigable objects into the world. Editorial typography and slightly imperfect frames keep it thoughtful and human; the generated hero is explanatory, not filler.
+**A store built from real first screens.** Hello Factory is the shop window of an autonomous software factory. Three pages, each with one job:
 
-The desktop layout uses a wide editorial split. On phones it drops one secondary navigation link, stacks the art after the promise, and removes non-essential step medallions so the sequence stays calm at 390 px.
+- `/` — the store front: the guide (describe a problem, get up to five tools), today's pick, six featured tools, the drum of twelve real first screens, then one horizontal shelf per curated category with "See all". It never shows the whole catalogue.
+- `/catalog/` — the whole catalogue: filters (shelf, what it is, runs as), search and the guide, sort (curator's order, newest, A to Z), a grid of cards. State lives in the URL so any view can be linked.
+- `/p/<slug>` — one tool: its first screen, what it does, who it is for, what is different about it, how it was checked, and a big "Open" button to its live address, followed by a shelf of related tools.
+
+Pictures do the talking. Every image is the tool's own first screen captured by the factory; there is no illustration, no stock art, no lore. Text is plain information: headings name the section, every sentence is usable.
 
 ## Tokens
 
-- Paper `#F3EEE4` / paper-deep `#E7DECD`: warm dawn haze and primary surfaces.
-- Ink `#162D34`: deep blue-green water, all primary text, and the single-mode dark passages.
-- Muted ink `#4D6265`: secondary copy (above 4.5:1 on paper).
-- Signal coral `#C84F39`, dark variant `#9F3424`: lighthouse signal and focused accents.
-- Dawn gold `#EFB95E`: the live-floor band.
-- Sea glass `#80A7A5`: restrained atmospheric secondary color.
-- White `#FFFAF0`: text on ink.
-
-The thesis is intentionally single-mode: a fixed dawn-to-night narrative would lose meaning if automatically inverted. Every surface is painted explicitly.
+- Paper `#F3EEE4` and paper-2 `#E9E2D3` for surfaces and card plates; white `#FFFAF0` for pictures and inputs.
+- Ink `#162D34` for text, the primary button, the counts band and the footer; muted ink `#4D6265` for secondary copy (≥ 4.5:1 on paper).
+- Signal coral `#C84F39` / `#9F3424` for focus rings, kickers and hover underlines; dawn gold `#EFB95E` for the picture plate on hover and the editor's-pick chip; green `#2F6A3B` for "New".
+- Single light mode, painted explicitly on every surface.
 
 ## Type and spacing
 
-- Display: system serif (`Georgia`, `Times New Roman`) for an editorial, field-note quality.
-- Interface/body: system sans (`Inter` where installed, then `system-ui`) for fast rendering and clarity.
-- Technical evidence: system monospace for time, sequence numbers, and artifact labels.
-- Type runs from 12 px annotations through a fluid 109 px hero; body copy is 16–20 px with 1.55–1.6 leading.
-- Spacing follows a 4/8 px rhythm, with generous 64–168 px section pauses. Reading measures stay below roughly 70 characters.
+- Display: system serif (`Georgia`) for titles and shelf headings; body/interface: system sans; labels, addresses and counts: system monospace.
+- Hero title fluid 42–77 px; shelf headings 27–38 px; card titles 21 px; body 15–19 px.
+- Pictures are 683×427 (16:10) frames with a 1 px border and an offset "plate" shadow that turns gold on hover — the one recurring motif.
+- Rails scroll horizontally with snap points and arrow buttons on pointer devices; on phones the sidebar becomes a chip strip and the drum becomes a swipe strip.
 
-## Interaction and motion
+## Motion and accessibility
 
-Links use underlines or structural rules rather than pill buttons. The loop reads as a ledger with evidence moving top to bottom. Content enters once with an 18 px rise and 650 ms opacity/transform transition. `prefers-reduced-motion` removes movement and reveals everything immediately. Focus rings are 3 px signal coral with a 4 px offset. Interactive targets are at least 44 px tall.
-
-## Hero art direction and provenance
-
-- Use case: `stylized-concept`; asset: responsive landing-page hero.
-- Subject/world: a solitary lighthouse made from stacked, luminous browser windows, standing in a completely calm sea at dawn.
-- Materials: frosted glass, pale stone, subtle metal frames, tactile editorial grain.
-- Light/lens: wide 35 mm-like view, low dawn light, long coral reflection, quiet mist, generous air around the tower.
-- Palette words: parchment sky, deep teal water, sea-glass mist, signal coral, restrained dawn gold.
-- Negative list: no people, boats, birds, readable text, UI labels, logos, brands, watermark, extra towers, dramatic storm, neon cyberpunk treatment.
-
-Final prompt: “Surreal editorial illustration for a sophisticated software studio landing page. A solitary lighthouse made entirely from neatly stacked browser windows and pale stone rises from a glass-still sea at dawn. The browser-window layers glow softly like floors in a beacon, with abstract panes and absolutely no readable interface text. Wide cinematic 3:2 composition, slightly low horizon, quiet negative space, restrained tactile grain, subtle cut-paper and painterly texture, believable reflections, calm and purposeful rather than whimsical. Parchment sky, deep teal water, sea-glass mist, signal-coral beacon, restrained dawn-gold light. No people, boats, birds, words, letters, numbers, logos, brands, watermark, extra towers, storm, or neon cyberpunk styling.”
-
-- Generator: Azure AI Foundry factory image deployment via `/opt/fleet/lib/gen-image.sh`.
-- Generated: 2026-08-27; original PNG retained at `assets/src/hero-lighthouse.png` with `hero-lighthouse.prompt.json` sidecar.
-- License/provenance: original machine-generated imagery created specifically for Hello Factory; disclosed in the footer. No reference images or copyrighted characters used.
+Cards lift 2 px on hover; rails scroll smoothly; the drum idles slowly and follows the pointer. `prefers-reduced-motion` removes the idle spin and transitions. Focus rings are 3 px coral with a 3 px offset; every control is at least 36 px tall and 44 px where it is the primary action. Empty and error states are written out ("The catalogue could not be loaded", "No tool at this address").

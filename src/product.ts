@@ -1,5 +1,5 @@
 import './style.css';
-import { loadCatalog, loadDetail, esc, KIND, KINDS, rail, wireRails, fmtDate, host, type Detail } from './ledger';
+import { loadCatalog, loadDetail, esc, KIND, KINDS, rail, wireRails, fmtDate, host, chips, qaVerdict, type Detail } from './ledger';
 import { related, slugFromPath } from './store';
 
 /* /p/<slug>: one tool's page. Everything on it is a fact from the brief, the curator, or the fleet's check ledger. */
@@ -17,32 +17,31 @@ async function main(): Promise<void> {
   document.title = `${d.title} — Hello Factory`;
   document.querySelector('meta[name="description"]')?.setAttribute('content', d.why || d.description);
   document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://hello-factory.sociobot.in/p/${d.slug}`);
-  const checks = d.checks; const checked = checks?.last_checked ? fmtDate(checks.last_checked) : '';
+  const checks = d.checks; const qa = qaVerdict(d);
   const parts: string[] = [];
   if (checks?.verify_runs) parts.push(`${checks.verify_runs} verifier run${checks.verify_runs === 1 ? '' : 's'}`);
   if (checks?.reviews_passed) parts.push(`${checks.reviews_passed} independent review${checks.reviews_passed === 1 ? '' : 's'} passed`);
-  const checksLine = parts.length ? esc(parts.join(', ') + (checked ? `, last checked ${checked}` : '')) : '';
+  const checksLine = esc([qa.detail, parts.length ? `${parts.join(', ')} recorded.` : ''].filter(Boolean).join(' '));
   root.innerHTML = `
-    <div class="product-media"><figure class="product-shot">${d.image ? `<img src="${esc(d.image)}" alt="First screen of ${esc(d.title)}" width="683" height="427" fetchpriority="high" decoding="async">` : `<span class="shot shot-empty"><b>${esc(d.title.slice(0, 1))}</b><i>${esc(KIND[d.class] ?? d.class)}</i></span>`}<figcaption>Real first screen, captured by the factory when the tool was last checked.</figcaption></figure></div>
+    <div class="product-media"><figure class="product-shot">${d.image ? `<img src="${esc(d.image)}" alt="First screen of ${esc(d.title)}" width="683" height="427" fetchpriority="high" decoding="async">` : `<span class="shot shot-empty"><b>${esc(d.title.slice(0, 1))}</b><i>${esc(KIND[d.class] ?? d.class)}</i></span>`}<figcaption>${d.image ? 'First screen preserved in the catalogue snapshot.' : 'No first-screen picture is available yet.'}</figcaption></figure></div>
     <div class="product-body">
-      <p class="chips"><span class="chip">${esc(KIND[d.class] ?? d.class)}</span><span class="chip">${esc(KINDS[d.kind ?? ''] ?? d.kind ?? '')}</span>${d.paid ? '<span class="chip chip-paid">Paid tier</span>' : '<span class="chip">Free</span>'}${d.state === 'VERIFYING' ? '<span class="chip chip-new">New</span>' : ''}${d.featured ? '<span class="chip chip-pick">Editor’s pick</span>' : ''}</p>
+      ${chips(d)}
       <h1>${esc(d.title)}</h1>
       <p class="product-lede">${esc(d.why || d.description)}</p>
-      <p class="product-actions"><a class="btn btn-primary btn-lg" href="${esc(d.url)}" rel="noopener">Open ${esc(host(d))}<span aria-hidden="true"> ↗</span></a></p>
+      <p class="product-actions"><a class="btn btn-primary btn-lg" href="${esc(d.url)}" rel="noopener">Open ${esc(host(d))}<span aria-hidden="true"> ↗</span><span class="visually-hidden">, external site</span></a></p>
       <dl class="facts">
         <div><dt>Address</dt><dd><a href="${esc(d.url)}" rel="noopener">${esc(host(d))}</a></dd></div>
-        ${d.released ? `<div><dt>Released</dt><dd>${esc(fmtDate(d.released))}</dd></div>` : ''}
+        ${d.released ? `<div><dt>First published</dt><dd>${esc(fmtDate(d.released))}</dd></div>` : ''}
         <div><dt>Runs as</dt><dd>${esc(KIND[d.class] ?? d.class)}${d.class === 'pwa-offline' ? ' · keeps working without a connection' : ''}</dd></div>
-        ${checksLine ? `<div><dt>Checks</dt><dd>${checksLine}</dd></div>` : ''}
+        <div><dt>QA state</dt><dd>${checksLine}</dd></div>
         ${d.updated && d.updated !== d.released ? `<div><dt>Last update</dt><dd>${esc(fmtDate(d.updated))}</dd></div>` : ''}
-        <div><dt>Account</dt><dd>None needed</dd></div>
       </dl>
       ${d.detail ? `<section class="product-text"><h2>What it does</h2>${para(d.detail)}</section>` : ''}
       ${d.user ? `<section class="product-text"><h2>Who it is for</h2>${para(d.user)}</section>` : ''}
       ${d.distinct ? `<section class="product-text"><h2>What is different about it</h2>${para(d.distinct)}</section>` : ''}
       ${d.workaround ? `<section class="product-text"><h2>What people did before</h2>${para(d.workaround)}</section>` : ''}
       ${d.reason && d.reason !== d.why ? `<section class="product-text"><h2>Why it is listed</h2>${para(d.reason)}</section>` : ''}
-      <section class="product-text release-facts"><h2>Every release comes with</h2><ul><li>a written brief from a real request</li><li>a test run of the tool's own claims</li><li>an independent verifier report</li><li>its own live address under sociobot.in</li></ul></section>
+      ${qa.tone === 'pass' ? '<section class="product-text release-facts"><h2>Recorded QA result</h2><p>This catalogue snapshot records a strict review with no open findings.</p></section>' : ''}
     </div>`;
   const cat = await loadCatalog(); if (!cat) return;
   const cats = new Map((cat.categories ?? []).map((c) => [c.id, c]));

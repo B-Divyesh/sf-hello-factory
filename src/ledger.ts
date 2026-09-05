@@ -1,5 +1,6 @@
 export type Entry = { slug: string; title: string; url: string; class: string; territory: string; description: string; paid: boolean; state: string; released?: string;
-  kind?: string; category?: string; interest?: number; reason?: string; why?: string; featured?: boolean; tags?: string[]; image?: string; updated?: string };
+  kind?: string; category?: string; interest?: number; reason?: string; why?: string; featured?: boolean; tags?: string[]; image?: string; updated?: string;
+  qa?: { strict_zero_review: boolean; reviewed_at?: string; status: string } };
 export type Detail = Entry & { detail?: string; user?: string; distinct?: string; workaround?: string; checks?: { verify_runs: number; reviews_passed: number; last_checked?: string } };
 export type Category = { id: string; title: string; blurb?: string };
 export type Catalog = { generated: string; count: number; products: Entry[]; categories?: Category[]; curated?: boolean };
@@ -17,14 +18,25 @@ export async function loadDetail(slug: string): Promise<Detail | null> {
 /* Without a curation run, derive a sensible kind/category from the artifact class and territory. */
 export function fillDefaults(e: Entry): void {
   if (!e.kind) {
-    if (['desktop-app', 'cli-installers', 'android-apk', 'ios-ipa', 'android'].includes(e.class)) e.kind = 'installable';
+    if (e.class === 'browser-game' || e.territory === 'browser-games') e.kind = 'game';
+    else if (['desktop-app', 'cli-installers', 'android-apk', 'ios-ipa', 'android'].includes(e.class)) e.kind = 'installable';
     else if (e.class.startsWith('library-')) e.kind = 'library';
     else if (e.class === 'cli' || e.territory === 'devtools-data') e.kind = 'devtool';
     else if (e.class === 'browser-extension') e.kind = 'extension';
-    else if (e.territory === 'games-creative' || e.territory === 'browser-games' || e.class === 'browser-game') e.kind = 'game';
+    else if (e.territory === 'games-creative') e.kind = 'game';
     else e.kind = 'product';
   }
-  if (!e.category) e.category = e.kind;
+  if (!e.category) e.category = 'new';
+}
+
+export type QAVerdict = { label: string; detail: string; date: string; tone: 'pass' | 'active' | 'changes' | 'unknown' };
+export function qaVerdict(e: Entry): QAVerdict {
+  const status = e.qa?.status || e.state;
+  const date = fmtDate(e.qa?.reviewed_at);
+  if (status === 'RELEASED' && e.qa?.strict_zero_review) return { label: 'QA passed', detail: date ? `Passed on ${date}.` : 'Passed; no check date was recorded.', date, tone: 'pass' };
+  if (status === 'VERIFYING') return { label: 'QA in progress', detail: date ? `In progress; last checked ${date}.` : 'In progress; no check date recorded yet.', date, tone: 'active' };
+  if (status === 'POLISHING') return { label: 'QA changes required', detail: date ? `Changes required after the ${date} check.` : 'Changes required; no check date was recorded.', date, tone: 'changes' };
+  return { label: 'QA status unavailable', detail: date ? `Status unavailable; last checked ${date}.` : 'No QA verdict or check date was recorded.', date, tone: 'unknown' };
 }
 export function picture(e: Entry, cls = 'shot', eager = false): string {
   return e.image
@@ -33,14 +45,15 @@ export function picture(e: Entry, cls = 'shot', eager = false): string {
 }
 export function host(e: Pick<Entry, 'url'>): string { return e.url.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
 export function chips(e: Entry): string {
-  return `<span class="chips"><span class="chip">${esc(KIND[e.class] ?? e.class)}</span>${e.paid ? '<span class="chip chip-paid">Paid tier</span>' : ''}${e.state === 'VERIFYING' ? '<span class="chip chip-new">New</span>' : ''}${e.featured || (e.interest && e.interest >= 5) ? '<span class="chip chip-pick">Editor’s pick</span>' : ''}</span>`;
+  const qa = qaVerdict(e);
+  return `<span class="chips"><span class="chip">${esc(KIND[e.class] ?? e.class)}</span>${e.paid ? '<span class="chip chip-paid">Paid tier</span>' : '<span class="chip">Free</span>'}<span class="chip chip-qa-${qa.tone}">${esc(qa.label)}${qa.date ? ` · ${esc(qa.date)}` : ''}</span>${e.featured || (e.interest && e.interest >= 5) ? '<span class="chip chip-pick">Editor’s pick</span>' : ''}</span>`;
 }
 /* One catalogue card. The card opens the tool's own page; the small "Open" link goes straight to the live address. */
 export function card(e: Entry, opts: { showWhy?: boolean; compact?: boolean; eager?: boolean } = {}): string {
   const line = (opts.showWhy && e.why) ? e.why : (e.description || 'Live and ready to try.');
   return `<li id="p-${esc(e.slug)}" class="card${opts.compact ? ' card-compact' : ''}" data-kind="${esc(e.kind ?? '')}" data-cat="${esc(e.category ?? '')}" data-class="${esc(e.class)}" data-search="${esc((e.title + ' ' + line + ' ' + e.slug + ' ' + (e.tags ?? []).join(' ')).toLowerCase())}">
     <a class="card-link" href="${detailHref(e)}">${picture(e, 'shot', opts.eager)}${chips(e)}<h3>${esc(e.title)}</h3><p>${esc(line)}</p></a>
-    <div class="card-foot"><span class="address">${esc(host(e))}</span><a class="open" href="${esc(e.url)}" rel="noopener">Open<span aria-hidden="true"> ↗</span><span class="visually-hidden"> ${esc(e.title)} at its live address</span></a></div>
+    <div class="card-foot"><span class="address">${esc(host(e))}</span><a class="open" href="${esc(e.url)}" rel="noopener">Open<span aria-hidden="true"> ↗</span><span class="visually-hidden"> ${esc(e.title)} on its external site</span></a></div>
   </li>`;
 }
 /* A horizontal shelf of cards with a "See all" link. */

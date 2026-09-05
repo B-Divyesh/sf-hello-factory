@@ -1,6 +1,6 @@
 import './style.css';
 import { loadCatalog, rail, wireRails, esc, fmtDate, detailHref, host, type Entry, type Category } from './ledger';
-import { byCategory, featuredPicks, justReleased } from './store';
+import { byCategory, featuredPicks, games as gameEntries, justReleased } from './store';
 import { mountDrum } from './showcase';
 import { mountGuide } from './recommend';
 
@@ -19,7 +19,7 @@ async function main(): Promise<void> {
   const all = cat.products; const cats: Category[] = cat.categories ?? [];
   for (const c of cats) catTitle.set(c.id, c.title);
   // hero: the live count, the guide, and the single biggest recommendation
-  document.querySelector('#hero-count')!.textContent = `${all.length} tools live, each on its own address.`;
+  document.querySelector('#hero-count')!.textContent = `${all.length} tools listed, each with its own address and current QA state.`;
   document.querySelector('#updated')!.textContent = `Catalogue updated ${fmtDate(cat.generated)}.`;
   const picks = featuredPicks(all, 13);
   const lead = picks[0]; const heroSlot = document.querySelector<HTMLElement>('#hero-feature');
@@ -35,9 +35,8 @@ async function main(): Promise<void> {
   const shelves = document.querySelector<HTMLElement>('#shelves')!;
   const fresh = justReleased(all, 14);
   const groups = byCategory(all, cats);
-  let html = rail('new', 'Just released', 'The newest first releases, with the ones still in their first check at the front.', fresh, '/catalog/?sort=new', all.length);
-  const play = groups.get('play') ?? [];
-  const games = play.filter((e) => e.kind === 'game');
+  let html = rail('new', 'Just released', 'Verified releases and tools still in their first QA check.', fresh, '/catalog/?release=1&sort=new', justReleased(all, all.length).length);
+  const games = gameEntries(all);
   if (games.length) html += rail('games', 'Games', 'Playable in the browser, no account.', games.slice(0, 14), '/catalog/?kind=game', games.length, { showWhy: true });
   for (const c of cats) { const items = groups.get(c.id) ?? []; if (!items.length) continue; html += rail(c.id, c.title, c.blurb ?? '', items.slice(0, 14), `/catalog/?cat=${encodeURIComponent(c.id)}`, items.length, { showWhy: true }); }
   const unshelved = groups.get('new') ?? [];
@@ -45,6 +44,6 @@ async function main(): Promise<void> {
   shelves.innerHTML = html; wireRails(shelves);
   // counts in the footer band
   const counts = document.querySelector<HTMLElement>('#counts');
-  if (counts) counts.innerHTML = [['tools live', all.length], ['games', games.length], ['shelves', cats.length || groups.size], ['work offline', all.filter((e) => e.class === 'pwa-offline').length]].map(([l, n]) => `<div><b>${n}</b><span>${l}</span></div>`).join('');
+  if (counts) counts.innerHTML = [['tools listed', all.length], ['QA passed', all.filter((e) => e.qa?.strict_zero_review).length], ['games', games.length], ['shelves', cats.length || groups.size]].map(([l, n]) => `<div><b>${n}</b><span>${l}</span></div>`).join('');
 }
 void main();

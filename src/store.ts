@@ -12,10 +12,14 @@ export function featuredPicks(all: Entry[], n = 12): Entry[] {
   return picks.concat(fill).slice(0, n);
 }
 
-/* Newest first releases. `released` is the first release date; tools still in their first verification window come first. */
+/* Public candidates: verified releases and tools in their first verification window. Items sent back for changes are excluded. */
 export function justReleased(all: Entry[], n = 14): Entry[] {
-  return [...all].sort((a, b) => Number(b.state === 'VERIFYING') - Number(a.state === 'VERIFYING') || (b.released ?? '').localeCompare(a.released ?? '') || byInterest(a, b)).slice(0, n);
+  return all.filter((entry) => entry.state === 'RELEASED' || entry.state === 'VERIFYING')
+    .sort((a, b) => Number(b.state === 'VERIFYING') - Number(a.state === 'VERIFYING') || (b.released ?? b.qa?.reviewed_at ?? '').localeCompare(a.released ?? a.qa?.reviewed_at ?? '') || byInterest(a, b)).slice(0, n);
 }
+
+/* The home Games shelf and the catalogue's game filter intentionally share this exact membership rule. */
+export function games(all: Entry[]): Entry[] { return all.filter((entry) => entry.kind === 'game').sort(byInterest); }
 
 /* Tools grouped by curated category, each group sorted by the curator's interest. Unknown categories fall under "new". */
 export function byCategory(all: Entry[], cats: Category[]): Map<string, Entry[]> {
@@ -46,7 +50,7 @@ export function slugFromPath(pathname: string, search = ''): string | null {
 export type SortKey = 'best' | 'new' | 'az';
 export function sortEntries(items: Entry[], key: SortKey): Entry[] {
   const out = [...items];
-  if (key === 'new') out.sort((a, b) => (b.released ?? '').localeCompare(a.released ?? '') || byInterest(a, b));
+  if (key === 'new') out.sort((a, b) => Number(b.state === 'VERIFYING') - Number(a.state === 'VERIFYING') || (b.released ?? b.qa?.reviewed_at ?? '').localeCompare(a.released ?? a.qa?.reviewed_at ?? '') || byInterest(a, b));
   else if (key === 'az') out.sort((a, b) => a.title.localeCompare(b.title));
   else out.sort(byInterest);
   return out;

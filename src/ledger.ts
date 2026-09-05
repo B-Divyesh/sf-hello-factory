@@ -69,7 +69,7 @@ export function rail(id: string, title: string, blurb: string, items: Entry[], s
   if (!items.length) return '';
   return `<section class="rail" aria-labelledby="rail-${esc(id)}">
     <div class="rail-head"><div><h2 id="rail-${esc(id)}">${esc(title)}</h2>${blurb ? `<p>${esc(blurb)}</p>` : ''}</div><div class="rail-nav"><button type="button" class="rail-btn rail-prev" aria-label="Scroll ${esc(title)} back">←</button><button type="button" class="rail-btn rail-next" aria-label="Scroll ${esc(title)} forward">→</button><a class="see-all" href="${esc(seeAll)}">See all ${total}<span aria-hidden="true"> →</span></a></div></div>
-    <div class="rail-scroller"><ol class="rail-track">${items.map((e, i) => card(e, { compact: true, showWhy: opts.showWhy, eager: i < 4 })).join('')}</ol></div>
+    <div class="rail-scroller"><ol class="rail-track">${items.map((e) => card(e, { compact: true, showWhy: opts.showWhy })).join('')}</ol></div>
   </section>`;
 }
 export function wireRails(root: ParentNode): void {

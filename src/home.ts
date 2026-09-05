@@ -29,7 +29,7 @@ async function main(): Promise<void> {
   mountGuide(form, input, document.querySelector('#guide-results')!, all);
   // featured this week: six editorial cards
   const feat = document.querySelector<HTMLElement>('#featured-grid');
-  if (feat) feat.innerHTML = picks.slice(1, 7).map((e, i) => featureCard(e, false, i < 3)).join('');
+  if (feat) feat.innerHTML = picks.slice(1, 7).map((e) => featureCard(e)).join('');
   // the drum of real first screens
   const drumRoot = document.querySelector<HTMLElement>('#drum'); if (drumRoot) mountDrum(drumRoot, picks.slice(0, 12));
   // shelves

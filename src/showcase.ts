@@ -7,7 +7,7 @@ export function mountDrum(root: HTMLElement, items: Entry[]): void {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   root.innerHTML = `<div class="drum-stage" tabindex="0" aria-roledescription="carousel" aria-label="Showcase of ${n} tools">
       <ul class="drum">${items.map((e, i) => `<li class="drum-card" style="--i:${i}"><a href="/p/${encodeURIComponent(e.slug)}/">
-        ${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="eager" decoding="sync">` : `<span class="shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}
+        ${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="lazy" decoding="async">` : `<span class="shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}
         <span class="drum-cap"><strong>${esc(e.title)}</strong><span>${esc(summary({ why: e.why, description: KIND[e.class] || e.description }))}</span></span></a></li>`).join('')}</ul>
     </div>
     <div class="drum-nav"><button type="button" class="drum-btn" data-dir="-1" aria-label="Previous">←</button><span class="drum-count" aria-live="polite"></span><button type="button" class="drum-btn" data-dir="1" aria-label="Next">→</button></div>`;

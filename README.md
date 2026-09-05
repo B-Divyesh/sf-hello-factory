@@ -15,7 +15,7 @@ npm run build
 npm run preview
 ```
 
-`npm test` runs unit, catalogue-publication, claim, browser, and axe checks. `npm run build` compiles the UI, fetches the current authorized controller snapshot, and then overwrites the catalogue data in `dist/`. The artifact includes product JSON, detail routes, sitemap entries, and every preserved picture.
+`npm test` runs unit, catalogue-publication, claim, browser, and axe checks. `npm run build` compiles the UI and then publishes the tracked, SHA-verified controller snapshot. It does not contact the controller pointer. The artifact includes product JSON, detail routes, sitemap entries, and every preserved picture. A full image build needs internet access and the authorized Azure session for any controller-selected private picture input.
 
 For a single local command, run `npm run dev`. It builds the catalogue first, then starts the preview server.
 
@@ -23,13 +23,15 @@ The one-click sample is at <https://hello-factory.sociobot.in/demo/>. It uses si
 
 ## Catalogue input
 
-The tracked `.factory/input/latest-catalog.json` makes tests reproducible. Every production build replaces it from the one authorized controller blob before publishing data. An authorized factory worker can refresh only that input with:
+The controller's moving pointer is retained locally at `.factory/input/latest-catalog.json`. The tracked `.factory/input/catalog-pin.json` selects one controller-retained raw source in `.factory/input/snapshots/<SHA-256>.json`. Normal builds and verification use that pin, so a clean checkout reproduces the documented deployment without fetching a newer controller source.
+
+An authorized factory worker can deliberately move the pin to the controller's next complete source with:
 
 ```sh
-npm run catalog:fetch
+npm run catalog:refresh
 ```
 
-The publisher validates exact catalogue, detail, state, and kind totals. It stops when any current product lacks a picture. It supplies conservative `kind` and `category` defaults, writes every product route, rebuilds the sitemap, and downloads the complete image map from this product or an exact Hello Factory work-order input selected by the controller. `npm run catalog:verify` checks the completed artifact against the fetched file, including every WebP header and dimension.
+This explicit command first fetches the authorized latest pointer, validates that every current product has a picture, downloads the controller's immutable source named by its raw SHA-256, atomically records the pin, then publishes it. If the pointer is incomplete or the retained bytes disagree, the existing pin remains unchanged. `npm run catalog:fetch` performs just the explicit fetch-and-pin step. The publisher validates exact catalogue, detail, state, and kind totals. It stops when any current product lacks a picture. It supplies conservative `kind` and `category` defaults, writes every product route, rebuilds the sitemap, and downloads the complete image map from this product or an exact Hello Factory work-order input selected by the controller. `npm run catalog:verify` checks the completed artifact against the pinned source, including every WebP header and dimension.
 
 ## Privacy and deployment
 

@@ -56,11 +56,11 @@
     "sandbox": "load the published JSON and compare its count with the first screen, Games shelf and filter, Just released QA badges, and an uncurated product page"
   },
   {
-    "id": "fresh-snapshot",
-    "claim": "Each production build fetches the current controller snapshot after compiling the UI and replaces stale public catalogue files.",
+    "id": "pinned-snapshot",
+    "claim": "Ordinary builds reproduce the pinned controller snapshot; only an explicit refresh can move it.",
     "where": "README build and catalogue input sections",
-    "test": "npm run test:unit -- --testNamePattern @claim:fresh-snapshot",
-    "sandbox": "temporary compiled UI artifact seeded with stale catalogue files; inject a newer authorized-shaped snapshot; assert JSON, details, routes, sitemap, and summary all change to the fresh input"
+    "test": "npm run test:unit -- --testNamePattern @claim:pinned-snapshot",
+    "sandbox": "pin a complete retained source, move a fake controller pointer, and publish twice; assert ordinary output keeps the first JSON, details, routes, sitemap, and source hash until explicit refresh selects the second source"
   },
   {
     "id": "snapshot-pictures",

@@ -1,16 +1,17 @@
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { publishCatalog } from './catalog-data.mjs';
-import { fetchLatestSnapshot } from './snapshot-data.mjs';
+import { pinLatestSnapshot } from './snapshot-data.mjs';
 
 export async function refreshCatalog({
-  snapshotPath = '.factory/input/latest-catalog.json',
+  inputDirectory = '.factory/input',
   outputDirectory = 'dist',
-  fetchSnapshot = fetchLatestSnapshot,
+  pinSnapshot = pinLatestSnapshot,
   skipImages = false,
 } = {}) {
-  await fetchSnapshot(snapshotPath);
-  return publishCatalog({ snapshotPath, outputDirectory, skipImages });
+  const pin = await pinSnapshot({ inputDirectory });
+  const result = await publishCatalog({ snapshotPath: pin.snapshotPath, outputDirectory, skipImages });
+  return { ...result, pin };
 }
 
 if (import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {

@@ -1,4 +1,4 @@
-import { fetchLatestSnapshot } from './snapshot-data.mjs';
+import { pinLatestSnapshot } from './snapshot-data.mjs';
 
-await fetchLatestSnapshot();
-console.log('Fetched the authorized Hello Factory catalogue snapshot.');
+const pin = await pinLatestSnapshot();
+console.log(`Pinned authorized controller snapshot ${pin.sourceSha256}: ${pin.count} products and ${pin.images} pictures.`);

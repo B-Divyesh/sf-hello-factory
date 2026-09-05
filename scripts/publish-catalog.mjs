@@ -1,7 +1,9 @@
 import { resolve } from 'node:path';
 import { publishCatalog } from './catalog-data.mjs';
+import { resolvePinnedSnapshot } from './snapshot-data.mjs';
 
-const snapshotPath = resolve(process.argv[2] ?? '.factory/input/latest-catalog.json');
+const suppliedSnapshot = process.argv[2];
+const snapshotPath = suppliedSnapshot ? resolve(suppliedSnapshot) : (await resolvePinnedSnapshot()).snapshotPath;
 const outputDirectory = resolve(process.argv[3] ?? 'dist');
 const result = await publishCatalog({
   snapshotPath,

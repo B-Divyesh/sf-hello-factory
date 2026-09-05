@@ -1,0 +1,14 @@
+{
+  "url": "https://hello-factory.sociobot.in",
+  "loadMs": 860,
+  "errors": [],
+  "a11y": {
+    "title": "Hello Factory — find a tool for a specific job",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "imgsMissingAlt": 0,
+    "buttonsUnlabeled": 0,
+    "textLength": 18014
+  }
+}

@@ -1,59 +1,38 @@
-# Hello Factory verification 4 handoff
+# Hello Factory repair 4 handoff
 
 Date: 5 September 2026
 
 Live URL: <https://hello-factory.sociobot.in>
 
-Implementation reviewed: `baf5a314c4c9241ea008bd353269cf5f4f553aca`
+Implementation: `e57b69b709c9de89fd8cd5433e6e4749d1c0d375`
 
-Documentation reviewed: `4e215f188af45635756dae57c5e8c043faaa7b25`
+Documentation and evidence: the commit containing this handoff, after the implementation commit above
 
-Branch tip received: `45187e8d2e921ffc270a33355a6f2a307cf00a4a`
+Deployed source pin: `a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3`
 
 ## Outcome
 
-**FAIL — 5 minor findings and 1 untested public claim.**
+All five Verification 4 findings and its untested sample-state claim are fixed. The production deployment uses the unchanged immutable pin: 527 products, 527 details, 527 current pictures, 707 preserved pictures, and 532 sitemap locations. A full live comparison found no record, route, picture, or sitemap mismatch.
 
-V3-01 and V3-02 remain fixed. The live artifact and a clean normal build both
-use source `a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3`:
-527 products, 527 details, 527 current pictures, 707 preserved pictures, and
-532 sitemap locations. All live records, product routes, and pictures passed.
+| Finding | Repair and outcome evidence |
+| --- | --- |
+| V4-01 sample QA statement | `.factory/demo.md` now states the actual pinned sample: six released game tools with passed QA. `@claim:demo-sandbox` checks all six rendered QA badges, as well as entry, reset, exit, storage, and request isolation. The live sample showed six passed badges and no in-progress or changes-required badge. |
+| V4-02 long route metadata | Product metadata is shortened at a word boundary while controller titles and descriptions remain unchanged in the published records and visible H1. Unit coverage checks every pinned row. Live checks covered all 33 affected routes; the longest title was 60 characters and the longest description was 152. |
+| V4-03 missing footer job sentence | Every standard route now says: “Find a focused tool for a specific job, compare its QA state, and open it at its own address.” A browser regression and live route sweep cover home, catalogue, sample, product, privacy, terms, and 404 pages. |
+| V4-04 guide output waited for full JSON | The guide now reads the response body as a stream, parses complete picks as chunks arrive, and updates its live region before the response finishes. `@claim:guide-stream` uses a two-chunk recorded response and proves the first result is exposed before the stream closes. The live action made one explicit request and returned five populated results. |
+| V4-05 stale copy count | The audit now records 527 products, 507 non-empty `why` lines, and a 20-word maximum from the pin. A regression compares those numbers and the recorded source hash with the pinned file. |
 
-The new findings are:
+## User paths checked live
 
-1. `.factory/demo.md` promises passed and in-progress QA states, but all six
-   live sample rows are released/passed; that statement has no tagged test.
-2. Thirty-one product document titles exceed 60 characters, and two product
-   meta descriptions exceed 155 characters.
-3. Standard route footers omit the required product one-liner.
-4. The model-backed guide returns a complete JSON result rather than streaming.
-5. `.factory/copy-audit.md` says there are 525 supplied `why` lines; the pin has
-   507.
+Fresh 1366×900 and 390×844 contexts showed the job, audience, and **Try it with sample data** action before scrolling, without horizontal overflow. The sample opened in one click, retained its **Demo — sample data, nothing is saved** label, showed realistic populated output, recovered from an empty search, reset to six entries, exited to the real catalogue, and left cookies, local storage, session storage, IndexedDB, and real catalogue bytes unchanged.
 
-Full evidence and remediation details are in
-[`.factory/verification-4.md`](verification-4.md).
+Normal catalogue search, all affected product metadata routes, all standard footers, privacy, terms, and the designed HTTP 404 were checked. The deliberate unknown-route 404 is expected and is classified separately in the browser report. The live catalogue comparison fetched all 527 details and physical routes plus all 707 preserved WebP pictures.
 
-## Verification completed
+The live guide sent nothing before its button was chosen, then made one request to the documented Sociobot endpoint. It returned five useful results. Normal browsing and the sample remained same-origin.
 
-- Fresh checkout: `npm ci --ignore-scripts`, `npm test`, `npm run build`, and
-  `npm run catalog:verify` passed.
-- All ten declared commands in `.factory/claims.json` passed separately.
-- Fresh desktop and phone first-screen and sample flows passed, except for the
-  false documented QA-state mix.
-- Normal, empty, invalid, aborted-load, unknown-product, and designed-404 paths
-  passed.
-- Keyboard, arrow-key carousel use, focus, 44 px targets, 200% text, reduced
-  motion, privacy storage, request-origin, route-title, and legal checks ran.
-- The URL verifier passed. Axe found zero violations on seven representative
-  routes.
-- Fresh mobile Lighthouse scored 100 in performance, accessibility, best
-  practices, and SEO. LCP was 0.99 s, CLS 0, and TBT 49.5 ms.
-- The live optional guide returned HTTP 200 after explicit action. The product
-  is static; backend tenant, persistence, health, and 429 checks do not apply.
+## Verification
 
-## How to verify
-
-From a clean checkout with Node.js 20 or newer:
+From a fresh GitHub checkout of `e57b69b` with Node.js 20 or newer:
 
 ```sh
 npm ci --ignore-scripts
@@ -62,11 +41,28 @@ npm run build
 npm run catalog:verify
 ```
 
-Then run each command in `.factory/claims.json` independently. Live evidence is
-under `/work/.evidence/hello-factory-verify-4/`.
+Results:
 
-## Next steps
+- Dependency install: 61 packages, 0 vulnerabilities.
+- `npm test`: 21 unit tests and 18 browser/Axe tests passed.
+- Every one of the 11 commands in `.factory/claims.json` passed independently.
+- Production build: 24.33 KB CSS; all emitted JavaScript chunks are small, and Lighthouse measured 7,957 transferred script bytes.
+- Catalogue verifier: 527 products/details/current pictures and 707 preserved pictures; source SHA matched; images verified.
+- `/opt/fleet/lib/verify-url.sh`: HTTPS 200, no unexpected console errors, correct title/language/landmarks, no missing image alternatives, and no unnamed buttons.
+- Live Axe scans: zero WCAG A/AA violations on seven representative routes.
+- Mobile Lighthouse: performance 100, accessibility 100, best practices 100, SEO 100; LCP 1.03 s, CLS 0, TBT 80.5 ms.
+- Security headers include CSP, HSTS, `Referrer-Policy`, and `X-Content-Type-Options`.
 
-Resolve all five findings, add a tagged assertion for any retained sample-state
-claim, rerun the full clean and live checks, and request another independent
-verification. No product code was changed in this verification.
+## Evidence
+
+- `.factory/evidence/repair-4-live/verify.json`
+- `.factory/evidence/repair-4-live/browser-report.json`
+- `.factory/evidence/repair-4-live/catalog-report.json`
+- `.factory/evidence/repair-4-live/lighthouse.json`
+- `.factory/evidence/repair-4-live/desktop-first-screen.png`
+- `.factory/evidence/repair-4-live/phone-first-screen.png`
+- `.factory/evidence/repair-4-live/phone-demo.png`
+
+## Known limits
+
+Hello Factory does not promise offline use, accounts, payments, or a product backend, so update installation, tenant isolation, restart persistence, health, and product-owned 429 checks do not apply. The optional guide depends on `api.sociobot.in`; catalogue search remains available when it fails. Ordinary builds deliberately remain on the immutable pin until an authorised worker runs the explicit refresh command.

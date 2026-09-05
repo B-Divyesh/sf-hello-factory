@@ -1,0 +1,110 @@
+{
+  "checkedAt": "2026-09-05T23:11:24.502Z",
+  "base": "https://hello-factory.sociobot.in",
+  "desktop": {
+    "status": 200,
+    "h1": "Find a small tool for a specific job",
+    "lede": "For people with a task to finish, search the factory’s public catalogue and open a matching tool.",
+    "action": "Try it with sample data",
+    "visibleBeforeScroll": true,
+    "horizontalOverflow": false
+  },
+  "phone": {
+    "status": 200,
+    "h1": "Find a small tool for a specific job",
+    "lede": "For people with a task to finish, search the factory’s public catalogue and open a matching tool.",
+    "action": "Try it with sample data",
+    "visibleBeforeScroll": true,
+    "horizontalOverflow": false
+  },
+  "demo": {
+    "initialCards": 6,
+    "passed": 6,
+    "nonPassed": 0,
+    "persistentLabel": true,
+    "empty": true,
+    "resetQuery": "plan a game night",
+    "resetCards": 6,
+    "storage": {
+      "localStorage": 0,
+      "sessionStorage": 0,
+      "indexedDB": 0
+    },
+    "cookies": 0,
+    "onlySameOrigin": true,
+    "exitedTo": "https://hello-factory.sociobot.in/catalog/",
+    "sampleLabelAfterExit": 0,
+    "realDataUnchanged": true
+  },
+  "metadata": {
+    "affectedRoutes": 33,
+    "maxTitle": 60,
+    "maxDescription": 152,
+    "fullHeadings": true,
+    "sourceCount": 527
+  },
+  "footers": {
+    "checks": [
+      {
+        "route": "/",
+        "text": "Find a focused tool for a specific job, compare its QA state, and open it at its own address.",
+        "matches": true
+      },
+      {
+        "route": "/catalog/",
+        "text": "Find a focused tool for a specific job, compare its QA state, and open it at its own address.",
+        "matches": true
+      },
+      {
+        "route": "/demo/",
+        "text": "Find a focused tool for a specific job, compare its QA state, and open it at its own address.",
+        "matches": true
+      },
+      {
+        "route": "/p/a11y-interaction-trace/",
+        "text": "Find a focused tool for a specific job, compare its QA state, and open it at its own address.",
+        "matches": true
+      },
+      {
+        "route": "/privacy/",
+        "text": "Find a focused tool for a specific job, compare its QA state, and open it at its own address.",
+        "matches": true
+      },
+      {
+        "route": "/terms/",
+        "text": "Find a focused tool for a specific job, compare its QA state, and open it at its own address.",
+        "matches": true
+      },
+      {
+        "route": "/404.html",
+        "text": "Find a focused tool for a specific job, compare its QA state, and open it at its own address.",
+        "matches": true
+      }
+    ],
+    "allMatch": true
+  },
+  "guide": {
+    "beforeAction": 0,
+    "calls": 1,
+    "streamUpdates": 1,
+    "text": "THE GUIDE\n\n5 tools for “plan a family game night without accounts”\n\nKitchen Table is the clearest account-free option for playing immediately.\n\nWEB APP WITH A SERVER\nFREE\nQA PASSED · 28 AUGUST 2026\nEDITOR’S PICK\nKitchen Table: ad-free, account-free classic family board games across phones in the same room or async\n\nPlay classic family board games on separate phones without accounts or ads.\n\nkitchen-table.sociobot.in\nOpen\n↗\nKitchen Table: ad-free, account-free classic family board games across ph"
+  },
+  "axe": {
+    "/": [],
+    "/catalog/": [],
+    "/demo/": [],
+    "/privacy/": [],
+    "/terms/": [],
+    "/404.html": [],
+    "/p/a11y-interaction-trace/": []
+  },
+  "expected404": {
+    "status": 404,
+    "title": "Page not found — Hello Factory",
+    "h1": "This catalogue page does not exist",
+    "console": "Failed to load resource: the server responded with a status of 404",
+    "classification": "Expected for the deliberately unknown route"
+  },
+  "unexpectedErrors": [],
+  "liveIndexMatchesDist": true
+}

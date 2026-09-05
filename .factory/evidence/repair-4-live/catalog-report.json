@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-09-05T23:13:52.328Z",
+  "sourceSha256": "a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3",
+  "catalogMatches": true,
+  "manifest": {
+    "sourceSha256": "a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3",
+    "generated": "2026-09-05T21:44:42.977830Z",
+    "count": 527,
+    "details": 527,
+    "currentPictures": 527,
+    "preservedPictures": 707,
+    "states": {
+      "POLISHING": 149,
+      "RELEASED": 358,
+      "VERIFYING": 20
+    },
+    "sourceKinds": {
+      "(missing)": 11,
+      "devtool": 114,
+      "extension": 45,
+      "game": 27,
+      "installable": 32,
+      "library": 22,
+      "product": 227,
+      "utility": 49
+    },
+    "publishedKinds": {
+      "devtool": 116,
+      "extension": 45,
+      "game": 27,
+      "installable": 35,
+      "library": 22,
+      "product": 233,
+      "utility": 49
+    },
+    "imagesVerified": true
+  },
+  "expectedProducts": 527,
+  "detailAndRouteFailures": [],
+  "currentPictures": 527,
+  "preservedPictures": 707,
+  "pictureFailures": [],
+  "sitemapLocations": 532,
+  "expectedSitemapLocations": 532
+}

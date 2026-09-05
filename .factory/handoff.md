@@ -72,3 +72,18 @@ The generated `dist/` directory was deployed to the existing production environm
 - Twenty-seven current products have no supplied picture. They use the existing typographic placeholder; no picture was invented.
 - Forty-eight source rows were not assigned a curated shelf. They are shown honestly under **Not yet shelved**.
 - Offline use is not promised and no service worker is installed.
+
+## Independent verification 2
+
+Date: 5 September 2026
+
+Implementation reviewed: `e70d1d3aabacc87487725f51ec5d4f7927448b2e`
+Documentation reviewed: `39306eaf5e9f45868ffb2d6e90c25934b750c0db`
+
+**PASS — 0 findings and 0 untested public claims.**
+
+An independent verifier used a fresh clone, ran `npm ci`, `npm test`, `npm run build`, and every one of the nine claim commands separately. The unit suite passed 13 tests and the browser suite passed 16 tests.
+
+Fresh live desktop and phone contexts showed the job, audience, and **Try it with sample data** before scrolling. The live demo loaded six sample entries, kept its persistent label, reset, exited to the real catalogue, and left cookies and browser storage empty. The URL verifier found HTTPS 200, no console errors, valid language/title structure, one H1, one main landmark, image alternatives, and labeled buttons. Axe found no serious or critical issues on the landing, catalogue, demo, legal, 404, and product routes. The designed unknown route correctly returned HTTP 404.
+
+Fresh mobile Lighthouse measured 100 performance, 100 accessibility, 100 best practices, and 100 SEO (LCP 0.91 s, CLS 0, TBT 7 ms). Earlier repair findings, including catalogue truth, QA states, first-screen clarity, sample isolation, legal routes, and accessibility, were all verified as fixed. The full report is `.factory/verification-2.md`.

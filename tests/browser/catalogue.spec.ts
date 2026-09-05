@@ -11,6 +11,17 @@ function dateLabel(iso?: string): string {
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso));
 }
 
+async function undersizedTargets(page: import('@playwright/test').Page): Promise<string[]> {
+  return page.locator('a[href], button, input, select').evaluateAll((elements) => elements.filter((element) => {
+    const box = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    return style.display !== 'none' && style.visibility !== 'hidden' && box.width > 0 && box.height > 0 && (box.width < 44 || box.height < 44);
+  }).map((element) => {
+    const box = element.getBoundingClientRect();
+    return `${element.tagName}:${(element.getAttribute('aria-label') || element.textContent || '').trim().slice(0, 30)}:${Math.round(box.width)}x${Math.round(box.height)}`;
+  }));
+}
+
 test('@claim:demo-sandbox loads, resets, and leaves no saved demo data', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
@@ -183,9 +194,11 @@ test('keyboard, reduced motion, route titles, links, and recovery paths work', a
   expect(await page.locator('.skip-link').evaluate((element) => getComputedStyle(element).outlineWidth)).toBe('3px');
   for (let step = 0; step < 8 && !(await page.getByRole('link', { name: 'Try it with sample data' }).evaluate((element) => element === document.activeElement)); step += 1) await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Try it with sample data' })).toBeFocused();
+  expect(await undersizedTargets(page)).toEqual([]);
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/demo\/$/);
   await expect(page).toHaveTitle('Demo — Hello Factory');
+  expect(await undersizedTargets(page)).toEqual([]);
   await page.goto('/');
   const drum = page.locator('.drum');
   await expect(drum).toBeVisible();
@@ -195,10 +208,18 @@ test('keyboard, reduced motion, route titles, links, and recovery paths work', a
   for (const [route, title] of [['/catalog/', /Hello Factory/], ['/privacy/', 'Privacy — Hello Factory'], ['/terms/', 'Terms — Hello Factory'], ['/404.html', 'Page not found — Hello Factory']] as const) {
     await page.goto(route);
     await expect(page).toHaveTitle(title);
+    expect(await undersizedTargets(page), route).toEqual([]);
   }
   for (const route of ['/', '/catalog/', '/demo/', '/privacy/', '/terms/', '/products.json']) {
     expect((await request.get(route)).status(), route).toBe(200);
   }
+  await page.goto('/p/a11y-interaction-trace/');
+  await expect(page.locator('.product h1')).toBeVisible();
+  expect(await undersizedTargets(page)).toEqual([]);
+  await page.goto('/');
+  await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+  await expect(page.getByRole('link', { name: 'Try it with sample data' })).toBeVisible();
   expect(errors).toEqual([]);
   await page.route('**/products.json', (route) => route.abort());
   await page.goto('/');

@@ -12,7 +12,8 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; background: var(--paper); font-size: 16px; line-height: 1.55; }
-a { color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; }
+a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; vertical-align: middle; color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; }
+button, input, select { min-width: 44px; min-height: 44px; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--coral-dark); outline-offset: 3px; border-radius: 2px; }
 h1, h2, h3, p, dl, figure { margin-top: 0; }
 img { max-width: 100%; height: auto; }
@@ -35,7 +36,7 @@ main { overflow: clip; }
 .header-search input { min-width: 220px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-size: .92rem; }
 
 /* Buttons and chips */
-.btn { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-height: 42px; padding: 8px 16px; line-height: 1.2; overflow-wrap: anywhere; border: 1px solid var(--ink); border-radius: 999px; background: transparent; color: var(--ink); font: 650 .92rem inherit; font-family: inherit; text-decoration: none; cursor: pointer; }
+.btn { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-height: 44px; padding: 8px 16px; line-height: 1.2; overflow-wrap: anywhere; border: 1px solid var(--ink); border-radius: 999px; background: transparent; color: var(--ink); font: 650 .92rem inherit; font-family: inherit; text-decoration: none; cursor: pointer; }
 .btn:hover { background: var(--paper-2); }
 .btn-primary { background: var(--ink); color: var(--white); }
 .btn-primary:hover { background: var(--coral-dark); border-color: var(--coral-dark); }
@@ -140,7 +141,7 @@ h1 { max-width: 16ch; margin-bottom: 18px; font-family: var(--serif); font-size:
 .feature-grid .feature-body { padding: 14px 0 0; }
 .feature-grid .feature h3 { font-size: 1.3rem; }
 .feature-grid .feature-body > p { font-size: .95rem; }
-.feature-grid .btn { min-height: 36px; padding: 0 12px; font-size: .82rem; }
+.feature-grid .btn { min-height: 44px; padding: 0 12px; font-size: .82rem; }
 .drum-root { margin-top: 8px; }
 .drum-stage { position: relative; height: 420px; perspective: 2800px; perspective-origin: 50% 40%; outline: none; touch-action: pan-y; cursor: grab; }
 .drum-stage:active { cursor: grabbing; }
@@ -180,7 +181,7 @@ h1 { max-width: 16ch; margin-bottom: 18px; font-family: var(--serif); font-size:
 .catalog-top h1 { margin: 0; font-size: clamp(2.2rem, 4.4vw, 3.6rem); }
 .cat-blurb { margin: 6px 0 0; color: var(--muted); }
 .catalog-search { grid-area: search; display: flex; gap: 8px; align-items: center; padding: 5px 5px 5px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--white); }
-.catalog-search input { flex: 1; min-width: 0; min-height: 42px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 1rem; }
+.catalog-search input { flex: 1; min-width: 0; min-height: 44px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 1rem; }
 .catalog-search input:focus-visible { outline: none; }
 .catalog-search:focus-within { box-shadow: 0 0 0 4px rgba(200,79,57,.18); }
 .catalog-controls { grid-area: controls; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
@@ -190,7 +191,7 @@ h1 { max-width: 16ch; margin-bottom: 18px; font-family: var(--serif); font-size:
 .shelf-strip { grid-area: strip; min-width: 0; display: none; }
 .shelf-strip ul, .catalog-side ul { list-style: none; margin: 0; padding: 0; }
 .shelf-strip ul { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
-.shelf-strip button { min-height: 44px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--white); color: var(--ink); font: 650 .82rem inherit; font-family: inherit; white-space: nowrap; cursor: pointer; }
+.shelf-strip button { min-width: 44px; min-height: 44px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--white); color: var(--ink); font: 650 .82rem inherit; font-family: inherit; white-space: nowrap; cursor: pointer; }
 .shelf-strip button b { color: var(--muted); font-weight: 500; }
 .shelf-strip button[aria-pressed="true"] { background: var(--ink); color: var(--white); border-color: var(--ink); }
 .shelf-strip button[aria-pressed="true"] b { color: #b9c7c5; }
@@ -237,7 +238,7 @@ h1 { max-width: 16ch; margin-bottom: 18px; font-family: var(--serif); font-size:
 /* Read-only sample, legal pages, and the catalogue 404 */
 .demo-banner { position: sticky; top: 0; z-index: 30; min-height: 52px; padding: 6px var(--gutter); display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px 24px; background: var(--sun); color: var(--ink); border-bottom: 1px solid var(--ink); }
 .demo-banner > span { display: flex; align-items: center; gap: 10px; }
-.demo-banner button, .demo-banner a { min-height: 40px; padding: 0 12px; display: inline-flex; align-items: center; border: 1px solid var(--ink); border-radius: 999px; background: var(--white); color: var(--ink); font: 700 .85rem inherit; font-family: inherit; text-decoration: none; cursor: pointer; }
+.demo-banner button, .demo-banner a { min-height: 44px; padding: 0 12px; display: inline-flex; align-items: center; border: 1px solid var(--ink); border-radius: 999px; background: var(--white); color: var(--ink); font: 700 .85rem inherit; font-family: inherit; text-decoration: none; cursor: pointer; }
 .demo-main { max-width: var(--max); margin: 0 auto; padding: clamp(36px, 5vw, 64px) var(--gutter) 96px; }
 .demo-head { max-width: 760px; margin-bottom: 42px; }
 .demo-head h1 { max-width: 13ch; }

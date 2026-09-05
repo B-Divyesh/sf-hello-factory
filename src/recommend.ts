@@ -30,5 +30,6 @@ export function mountGuide(form: HTMLFormElement, input: HTMLInputElement, host:
     } finally { busy = false; btn.disabled = false; }
   };
   btn.addEventListener('click', ask);
+  form.addEventListener('submit', (ev) => { ev.preventDefault(); if (input.value.trim().split(/\s+/).length >= 3) void ask(); else input.focus(); });
   input.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && input.value.trim().split(/\s+/).length >= 3) { ev.preventDefault(); void ask(); } });
 }

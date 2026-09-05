@@ -6,7 +6,7 @@ Live site: <https://hello-factory.sociobot.in>
 
 ## Run and verify
 
-Use Node.js 20 or newer, an internet connection, and the worker’s authorized Azure session. The build downloads pictures only from this site or the exact `hello-factory-repair-1/input/shots` work-order prefix.
+Use Node.js 20 or newer. Tests run from the tracked snapshot without cloud credentials. A production build also needs an internet connection and the worker’s authorized Azure session.
 
 ```sh
 npm ci
@@ -15,7 +15,7 @@ npm run build
 npm run preview
 ```
 
-`npm test` runs unit, catalogue-publication, claim, browser, and axe checks. `npm run build` writes the complete static artifact to `dist/`, including product JSON, detail routes, sitemap entries, and preserved pictures.
+`npm test` runs unit, catalogue-publication, claim, browser, and axe checks. `npm run build` compiles the UI, fetches the current authorized controller snapshot, and then overwrites the catalogue data in `dist/`. The artifact includes product JSON, detail routes, sitemap entries, and every preserved picture.
 
 For a single local command, run `npm run dev`. It builds the catalogue first, then starts the preview server.
 
@@ -23,13 +23,13 @@ The one-click sample is at <https://hello-factory.sociobot.in/demo/>. It uses si
 
 ## Catalogue input
 
-The tracked `.factory/input/latest-catalog.json` is the authorized controller snapshot used by clean builds. An authorized factory worker can refresh only that input with:
+The tracked `.factory/input/latest-catalog.json` makes tests reproducible. Every production build replaces it from the one authorized controller blob before publishing data. An authorized factory worker can refresh only that input with:
 
 ```sh
 npm run catalog:fetch
 ```
 
-The publisher validates the snapshot count, supplies missing `kind` and `category` defaults, writes all product records, creates product routes, rebuilds the sitemap, and downloads every available picture from this product’s public site.
+The publisher validates exact catalogue, detail, state, and kind totals. It stops when any current product lacks a picture. It supplies conservative `kind` and `category` defaults, writes every product route, rebuilds the sitemap, and downloads the complete image map from this product or an exact Hello Factory work-order input selected by the controller. `npm run catalog:verify` checks the completed artifact against the fetched file, including every WebP header and dimension.
 
 ## Privacy and deployment
 

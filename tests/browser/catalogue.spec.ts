@@ -1,5 +1,15 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+import { normalizeSnapshot } from '../../scripts/catalog-data.mjs';
+
+type Product = { slug: string; title: string; class: string; territory: string; description: string; why?: string; state: string; kind?: string; category?: string; image?: string; qa: { status: string; strict_zero_review: boolean; reviewed_at?: string } };
+
+function dateLabel(iso?: string): string {
+  if (!iso) return '';
+  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso));
+}
 
 test('@claim:demo-sandbox loads, resets, and leaves no saved demo data', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
@@ -11,6 +21,7 @@ test('@claim:demo-sandbox loads, resets, and leaves no saved demo data', async (
   await expect(page).toHaveURL(/\/demo\/$/);
   await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
   await expect(page.locator('#demo-grid .card')).toHaveCount(6);
+  expect(await page.locator('#demo-grid .card').evaluateAll((cards) => cards.every((card) => card.getAttribute('data-kind') === 'game'))).toBe(true);
   await page.locator('#demo-search').fill('no-result-boundary');
   await expect(page.locator('#demo-empty')).toBeVisible();
   await page.getByRole('button', { name: 'Reset demo' }).click();
@@ -93,22 +104,58 @@ test('@claim:guide-explicit sends words only after Ask the guide', async ({ page
   expect(JSON.parse(calls[0].body ?? '{}')).toEqual({ query: 'split a restaurant bill' });
 });
 
-test('@claim:qa-verdicts shows controller verdicts and recorded dates', async ({ page }) => {
-  await page.goto('/p/a11y-interaction-trace/');
-  await expect(page.locator('.product h1')).toHaveText('A11y Interaction Trace');
-  await expect(page.locator('.product .chips')).toContainText('QA passed · 28 August 2026');
-  await expect(page.locator('.facts')).toContainText('Passed on 28 August 2026.');
-  await page.goto('/p/client-request-catalog/');
-  await expect(page.locator('.product .chips')).toContainText('QA changes required · 2 September 2026');
-  await page.goto('/p/assessment-authorship-receipts/');
-  await expect(page.locator('.product .chips')).toContainText('QA in progress');
-  await expect(page.locator('.facts')).toContainText('no check date recorded yet');
+test('@claim:qa-verdicts shows controller verdicts and recorded dates', async ({ page, request }) => {
+  const catalog = await (await request.get('/products.json')).json() as { products: Product[] };
+  const expected = [
+    ['RELEASED', 'QA passed'],
+    ['VERIFYING', 'QA in progress'],
+    ['POLISHING', 'QA changes required'],
+  ] as const;
+  for (const [state, label] of expected) {
+    const product = catalog.products.find((entry) => entry.state === state);
+    expect(product, `A ${state} catalogue row`).toBeTruthy();
+    await page.goto(`/p/${product!.slug}/`);
+    await expect(page.locator('.product h1')).toHaveText(product!.title);
+    await expect(page.locator('.product .chips')).toContainText(label);
+    expect(product!.qa.status).toBe(state);
+    if (product!.qa.reviewed_at) {
+      await expect(page.locator('.product .chips')).toContainText(dateLabel(product!.qa.reviewed_at));
+      await expect(page.locator('.facts')).toContainText(dateLabel(product!.qa.reviewed_at));
+    } else {
+      await expect(page.locator('.facts')).toContainText(/no check date/i);
+    }
+  }
 });
 
 test('@claim:catalogue-truth games, recent releases, defaults, and controller counts agree across pages', async ({ page, request }) => {
+  const sourceBytes = await readFile('.factory/input/latest-catalog.json');
+  const source = JSON.parse(sourceBytes.toString()) as { catalog: { generated: string; count: number; products: Product[] }; details: Record<string, Product>; images: Record<string, string> };
+  const expected = normalizeSnapshot(source).catalog as { generated: string; count: number; products: Product[] };
   const response = await request.get('/products.json');
-  const catalog = await response.json();
-  const gameCount = catalog.products.filter((entry: { kind: string }) => entry.kind === 'game').length;
+  const catalog = await response.json() as { generated: string; count: number; products: Product[] };
+  const summary = await (await request.get('/catalog-build.json')).json();
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  const publishedGames = catalog.products.filter((entry) => entry.kind === 'game');
+  const expectedGames = source.catalog.products.filter((entry) => entry.kind === 'game' || (!entry.kind && (entry.class === 'browser-game' || entry.territory === 'browser-games')));
+  const states = Object.fromEntries(['POLISHING', 'RELEASED', 'VERIFYING'].map((state) => [state, source.catalog.products.filter((entry) => entry.state === state).length]));
+  expect(catalog).toEqual(expected);
+  expect(summary).toMatchObject({
+    sourceSha256: createHash('sha256').update(sourceBytes).digest('hex'),
+    generated: source.catalog.generated,
+    count: source.catalog.count,
+    details: source.catalog.count,
+    currentPictures: source.catalog.count,
+    states,
+  });
+  expect(catalog.products.every((entry) => entry.image === `/shots/${entry.slug}.webp`)).toBe(true);
+  expect(publishedGames.map((entry) => entry.slug).sort()).toEqual(expectedGames.map((entry) => entry.slug).sort());
+  expect(sitemap.match(/<loc>/g)).toHaveLength(source.catalog.count + 5);
+  for (const entry of source.catalog.products) {
+    expect(sitemap).toContain(`/p/${entry.slug}/`);
+    const detail = JSON.parse(await readFile(`dist/products/${entry.slug}.json`, 'utf8'));
+    expect(detail).toMatchObject({ description: source.details[entry.slug].description, qa: source.details[entry.slug].qa, image: `/shots/${entry.slug}.webp` });
+  }
+  const gameCount = publishedGames.length;
   await page.goto('/');
   await expect(page.locator('#hero-count')).toContainText(`${catalog.count} tools listed`);
   const gamesRail = page.locator('#rail-games').locator('xpath=ancestor::section');
@@ -118,8 +165,9 @@ test('@claim:catalogue-truth games, recent releases, defaults, and controller co
   await expect(releasedRail.locator('.chip-qa-active').first()).toBeVisible();
   await page.goto('/catalog/?kind=game');
   await expect(page.locator('#cat-count')).toContainText(`${gameCount} of ${catalog.count} tools`);
-  await page.goto('/p/assessment-authorship-receipts/');
-  await expect(page.locator('.product .chips')).toContainText('Web app with a server');
+  const unshelved = catalog.products.find((entry) => entry.category === 'new');
+  expect(unshelved).toBeTruthy();
+  await page.goto(`/p/${unshelved!.slug}/`);
   await expect(page.locator('#crumb-cat')).toHaveText('Not yet shelved');
 });
 

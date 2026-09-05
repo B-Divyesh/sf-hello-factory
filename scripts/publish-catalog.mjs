@@ -8,4 +8,4 @@ const result = await publishCatalog({
   outputDirectory,
   skipImages: process.env.CATALOG_SKIP_IMAGES === '1',
 });
-console.log(`Published ${result.count} catalogue entries and preserved ${result.images} pictures.`);
+console.log(`Published snapshot ${result.generated}: ${result.count} products and ${result.images} preserved pictures.`);

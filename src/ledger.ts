@@ -23,7 +23,6 @@ export function fillDefaults(e: Entry): void {
     else if (e.class.startsWith('library-')) e.kind = 'library';
     else if (e.class === 'cli' || e.territory === 'devtools-data') e.kind = 'devtool';
     else if (e.class === 'browser-extension') e.kind = 'extension';
-    else if (e.territory === 'games-creative') e.kind = 'game';
     else e.kind = 'product';
   }
   if (!e.category) e.category = 'new';

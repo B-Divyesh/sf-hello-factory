@@ -4,10 +4,13 @@ import { fillDefaults, qaVerdict, summary, type Entry } from './ledger';
 const entry = (extra: Partial<Entry> = {}): Entry => ({ slug: 'sample', title: 'Sample', url: 'https://sample.sociobot.in', class: 'static-web', territory: 'utilities', description: 'Sample.', paid: false, state: 'VERIFYING', ...extra });
 
 describe('catalogue defaults', () => {
-  it('classifies missing fields and puts uncurated rows on the named fallback shelf', () => {
-    const game = entry({ class: 'web-with-backend', territory: 'games-creative' });
+  it('uses playable-game evidence and puts uncurated rows on the named fallback shelf', () => {
+    const game = entry({ class: 'browser-game', territory: 'games-creative' });
     fillDefaults(game);
     expect(game).toMatchObject({ kind: 'game', category: 'new' });
+    const audioTool = entry({ class: 'web-with-backend', territory: 'games-creative' });
+    fillDefaults(audioTool);
+    expect(audioTool).toMatchObject({ kind: 'product', category: 'new' });
     const installer = entry({ class: 'desktop-app', territory: 'games-creative' });
     fillDefaults(installer);
     expect(installer).toMatchObject({ kind: 'installable', category: 'new' });

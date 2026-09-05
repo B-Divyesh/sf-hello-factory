@@ -23,7 +23,12 @@ async function main(): Promise<void> {
   }
   const bySlug = new Map(catalog.products.map((entry) => [entry.slug, entry]));
   const selected = preferred.map((slug) => bySlug.get(slug)).filter((entry): entry is Entry => Boolean(entry));
-  const sample = selected.length >= 4 ? selected : catalog.products.filter((entry) => entry.kind === 'game').slice(0, 6);
+  const selectedSlugs = new Set(selected.map((entry) => entry.slug));
+  for (const entry of catalog.products.filter((entry) => entry.kind === 'game')) {
+    if (selected.length >= 6) break;
+    if (!selectedSlugs.has(entry.slug)) selected.push(entry);
+  }
+  const sample = selected.slice(0, 6);
   const render = (): void => {
     const shown = sample.filter((entry) => matches(entry, search.value));
     grid.innerHTML = shown.map((entry) => card(entry, { showWhy: true, eager: true })).join('');

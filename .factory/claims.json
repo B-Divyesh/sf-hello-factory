@@ -56,8 +56,15 @@
     "sandbox": "load the published JSON and compare its count with the first screen, Games shelf and filter, Just released QA badges, and an uncurated product page"
   },
   {
+    "id": "fresh-snapshot",
+    "claim": "Each production build fetches the current controller snapshot after compiling the UI and replaces stale public catalogue files.",
+    "where": "README build and catalogue input sections",
+    "test": "npm run test:unit -- --testNamePattern @claim:fresh-snapshot",
+    "sandbox": "temporary compiled UI artifact seeded with stale catalogue files; inject a newer authorized-shaped snapshot; assert JSON, details, routes, sitemap, and summary all change to the fresh input"
+  },
+  {
     "id": "snapshot-pictures",
-    "claim": "Product pictures come from the controller snapshot and remain local to Hello Factory.",
+    "claim": "Every current product keeps its controller picture, description, and QA record on Hello Factory.",
     "where": "featured section, product cards, footer",
     "test": "npm run test:unit -- --testNamePattern @claim:snapshot-pictures",
     "sandbox": "normalize the tracked controller snapshot; assert each supplied image becomes the matching local product and detail image path"

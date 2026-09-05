@@ -10,7 +10,7 @@ function featureCard(e: Entry, big = false, eager = big): string {
   return `<article class="feature${big ? ' feature-big' : ''}">
     <a class="feature-link" href="${detailHref(e)}" aria-label="Open the catalogue page for ${esc(e.title)}">${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="${eager ? 'eager' : 'lazy'}" decoding="async">` : `<span class="shot shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}</a>
     <div class="feature-body"><p class="kicker">${esc(e.category ? (catTitle.get(e.category) ?? '') : '')}</p><${heading}><a href="${detailHref(e)}">${esc(e.title)}</a></${heading}><p>${esc(summary(e))}</p>
-      <p class="feature-actions"><a class="btn btn-primary" href="${esc(e.url)}" rel="noopener">Open ${esc(host(e))}<span aria-hidden="true"> ↗</span></a><a class="btn" href="${detailHref(e)}">Details</a></p></div>
+      <p class="feature-actions"><a class="btn btn-primary" href="${esc(e.url)}" rel="noopener">Open ${esc(host(e))}<span aria-hidden="true"> ↗</span><span class="visually-hidden">, external site</span></a><a class="btn" href="${detailHref(e)}">Details</a></p></div>
   </article>`;
 }
 const catTitle = new Map<string, string>();

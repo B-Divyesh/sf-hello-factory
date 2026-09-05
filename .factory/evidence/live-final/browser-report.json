@@ -1,0 +1,60 @@
+{
+  "implementation": "e70d1d3aabacc87487725f51ec5d4f7927448b2e",
+  "checkedAt": "2026-09-05T20:06:43.248Z",
+  "views": {
+    "desktop": {
+      "title": "Hello Factory — find a tool for a specific job",
+      "h1": "Find a small tool for a specific job",
+      "audience": "For people with a task to finish, search the factory’s public catalogue and open a matching tool.",
+      "action": "Try it with sample data",
+      "actionBeforeScroll": true,
+      "horizontalOverflow": false,
+      "transferBytes": 530199,
+      "imageRequests": 20,
+      "cookies": "",
+      "errors": [],
+      "externalRequests": []
+    },
+    "phone": {
+      "title": "Hello Factory — find a tool for a specific job",
+      "h1": "Find a small tool for a specific job",
+      "audience": "For people with a task to finish, search the factory’s public catalogue and open a matching tool.",
+      "action": "Try it with sample data",
+      "actionBeforeScroll": true,
+      "horizontalOverflow": false,
+      "transferBytes": 224727,
+      "imageRequests": 6,
+      "cookies": "",
+      "errors": [],
+      "externalRequests": []
+    }
+  },
+  "demo": {
+    "banner": true,
+    "initialCards": 6,
+    "emptyShown": true,
+    "resetCards": 6,
+    "storage": {
+      "local": 0,
+      "session": 0,
+      "indexedDb": 0
+    },
+    "cookies": 0,
+    "exitPath": "/catalog/"
+  },
+  "accessibility": {
+    "/": [],
+    "/catalog/": [],
+    "/demo/": [],
+    "/privacy/": [],
+    "/terms/": [],
+    "/p/a11y-interaction-trace/": []
+  },
+  "routes": {
+    "notFound": {
+      "status": 404,
+      "title": "Page not found — Hello Factory",
+      "h1": "This catalogue page does not exist"
+    }
+  }
+}

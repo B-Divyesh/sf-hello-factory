@@ -32,6 +32,6 @@ Cards lift 2 px on hover; rails scroll smoothly; the drum idles slowly and follo
 
 ## Catalogue pictures and social image
 
-- Product pictures are the controller snapshot's existing public screenshots. The build downloads them only from `https://hello-factory.sociobot.in/shots/` and serves local copies. Missing pictures use the existing typographic placeholder.
+- Product pictures are the controller snapshot's screenshots. The build downloads them from `https://hello-factory.sociobot.in/shots/` or this repair's exact authorized input prefix, then serves local copies. Missing pictures use the existing typographic placeholder.
 - `assets/src/og-hello-factory.svg` is an original hand-authored social card made on 5 September 2026. It uses the factory mark, paper palette, and offset product-screen plate; `public/og-hello-factory.png` is its 1200×630 browser-rendered export.
 - The older lighthouse files remain in source history but are not used in the current catalogue interface.

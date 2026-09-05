@@ -1,8 +1,13 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
 import { dirname, join } from 'node:path';
+import { promisify } from 'node:util';
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,60}$/;
 const IMAGE_ORIGIN = 'https://hello-factory.sociobot.in';
+const PRIVATE_IMAGE_ORIGIN = 'https://sociobotblob.blob.core.windows.net';
+const PRIVATE_IMAGE_PREFIX = '/factory-evidence/hello-factory-repair-1/input/shots/';
+const execFileAsync = promisify(execFile);
 
 export function inferKind(entry) {
   if (entry.kind) return entry.kind;
@@ -67,8 +72,18 @@ function sitemap(catalog) {
 
 async function fetchImage(url, destination) {
   const parsed = new URL(url);
-  if (parsed.origin !== IMAGE_ORIGIN || !/^\/shots\/[a-z0-9-]+\.webp$/.test(parsed.pathname)) {
-    throw new Error('A snapshot image is outside this product\'s public shots path.');
+  const publicImage = parsed.origin === IMAGE_ORIGIN && /^\/shots\/[a-z0-9-]+\.webp$/.test(parsed.pathname);
+  const privateImage = parsed.origin === PRIVATE_IMAGE_ORIGIN && parsed.pathname.startsWith(PRIVATE_IMAGE_PREFIX) && /^\/[a-z0-9-]+\.webp$/.test(parsed.pathname.slice(PRIVATE_IMAGE_PREFIX.length - 1));
+  if (!publicImage && !privateImage) {
+    throw new Error('A snapshot image is outside the Hello Factory public path and authorized work-order prefix.');
+  }
+  if (privateImage) {
+    await mkdir(dirname(destination), { recursive: true });
+    const blobName = decodeURIComponent(parsed.pathname).replace('/factory-evidence/', '');
+    await execFileAsync('az', ['storage', 'blob', 'download', '--account-name', 'sociobotblob', '--container-name', 'factory-evidence', '--name', blobName, '--file', destination, '--auth-mode', 'login', '--overwrite', 'true', '--no-progress', '--only-show-errors', '--output', 'none'], { maxBuffer: 1024 * 1024 });
+    const bytes = await readFile(destination);
+    if (bytes.length < 100 || bytes.subarray(0, 4).toString('ascii') !== 'RIFF' || bytes.subarray(8, 12).toString('ascii') !== 'WEBP') throw new Error('Downloaded work-order picture is not a WebP image.');
+    return;
   }
   let failure;
   for (let attempt = 0; attempt < 3; attempt += 1) {

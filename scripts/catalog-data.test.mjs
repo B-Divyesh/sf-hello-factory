@@ -8,11 +8,13 @@ describe('controller catalogue publication', () => {
     const output = normalizeSnapshot(source);
     const knownCategories = new Set(source.catalog.categories.map((category) => category.id));
     const expectedFallbacks = source.catalog.products.filter((entry) => !entry.category || !knownCategories.has(entry.category)).length;
+    const expectedProductImages = source.catalog.products.filter((entry) => source.images[entry.slug]).length;
     expect(output.catalog.products).toHaveLength(source.catalog.count);
     expect(Object.keys(output.details)).toHaveLength(source.catalog.count);
     expect(output.catalog.products.every((entry) => entry.kind && entry.category)).toBe(true);
     expect(output.catalog.products.filter((entry) => entry.category === 'new')).toHaveLength(expectedFallbacks);
-    expect(output.catalog.products.filter((entry) => entry.image)).toHaveLength(Object.keys(source.images).length);
-    for (const [slug] of Object.entries(source.images)) expect(output.details[slug].image).toBe(`/shots/${slug}.webp`);
+    expect(output.catalog.products.filter((entry) => entry.image)).toHaveLength(expectedProductImages);
+    for (const [slug] of Object.entries(source.images)) if (output.details[slug]) expect(output.details[slug].image).toBe(`/shots/${slug}.webp`);
+    expect(Object.keys(output.images)).toHaveLength(Object.keys(source.images).length);
   });
 });

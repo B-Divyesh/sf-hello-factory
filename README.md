@@ -6,7 +6,7 @@ Live site: <https://hello-factory.sociobot.in>
 
 ## Run and verify
 
-Use Node.js 20 or newer and an internet connection. The build preserves catalogue pictures by downloading only the snapshot URLs on `hello-factory.sociobot.in`.
+Use Node.js 20 or newer, an internet connection, and the worker’s authorized Azure session. The build downloads pictures only from this site or the exact `hello-factory-repair-1/input/shots` work-order prefix.
 
 ```sh
 npm ci

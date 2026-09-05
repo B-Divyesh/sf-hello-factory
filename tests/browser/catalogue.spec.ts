@@ -123,6 +123,44 @@ test('@claim:catalogue-truth games, recent releases, defaults, and controller co
   await expect(page.locator('#crumb-cat')).toHaveText('Not yet shelved');
 });
 
+test('keyboard, reduced motion, route titles, links, and recovery paths work', async ({ browser, request }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/');
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.skip-link')).toBeFocused();
+  expect(await page.locator('.skip-link').evaluate((element) => getComputedStyle(element).outlineWidth)).toBe('3px');
+  for (let step = 0; step < 8 && !(await page.getByRole('link', { name: 'Try it with sample data' }).evaluate((element) => element === document.activeElement)); step += 1) await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Try it with sample data' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/demo\/$/);
+  await expect(page).toHaveTitle('Demo — Hello Factory');
+  await page.goto('/');
+  const drum = page.locator('.drum');
+  await expect(drum).toBeVisible();
+  const before = await drum.evaluate((element) => getComputedStyle(element).transform);
+  await page.waitForTimeout(500);
+  expect(await drum.evaluate((element) => getComputedStyle(element).transform)).toBe(before);
+  for (const [route, title] of [['/catalog/', /Hello Factory/], ['/privacy/', 'Privacy — Hello Factory'], ['/terms/', 'Terms — Hello Factory'], ['/404.html', 'Page not found — Hello Factory']] as const) {
+    await page.goto(route);
+    await expect(page).toHaveTitle(title);
+  }
+  for (const route of ['/', '/catalog/', '/demo/', '/privacy/', '/terms/', '/products.json']) {
+    expect((await request.get(route)).status(), route).toBe(200);
+  }
+  expect(errors).toEqual([]);
+  await page.route('**/products.json', (route) => route.abort());
+  await page.goto('/');
+  await expect(page.locator('#hero-count')).toContainText('could not be loaded');
+  await page.unroute('**/products.json');
+  await page.goto('/p/?slug=not-a-real-product');
+  await expect(page.locator('h1')).toHaveText('No tool at this address.');
+  await context.close();
+});
+
 for (const route of ['/', '/catalog/', '/demo/', '/privacy/', '/terms/', '/404.html', '/p/a11y-interaction-trace/']) {
   test(`has no serious accessibility violations on ${route}`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });

@@ -1,6 +1,7 @@
 import './style.css';
 import { loadCatalog, loadDetail, esc, KIND, rail, wireRails, fmtDate, host, chips, qaVerdict, summary, type Detail } from './ledger';
 import { related, slugFromPath } from './store';
+import { productDocumentTitle, productMetaDescription } from './metadata';
 
 /* /p/<slug>: one tool's page. Everything on it is a fact from the brief, the curator, or the fleet's check ledger. */
 function para(s?: string): string { return s ? s.trim().split(/\n{2,}|\n(?=[-•*] )/).filter(Boolean).map((p) => `<p>${esc(p.trim())}</p>`).join('') : ''; }
@@ -14,8 +15,8 @@ async function main(): Promise<void> {
     return;
   }
   const catTitle = document.querySelector<HTMLElement>('#crumb-cat');
-  document.title = `${d.title} — Hello Factory`;
-  document.querySelector('meta[name="description"]')?.setAttribute('content', d.why || d.description);
+  document.title = productDocumentTitle(d.title);
+  document.querySelector('meta[name="description"]')?.setAttribute('content', productMetaDescription(d.why || d.description));
   document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://hello-factory.sociobot.in/p/${d.slug}/`);
   const checks = d.checks; const qa = qaVerdict(d);
   const parts: string[] = [];

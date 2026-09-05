@@ -33,6 +33,8 @@ test('@claim:demo-sandbox loads, resets, and leaves no saved demo data', async (
   await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
   await expect(page.locator('#demo-grid .card')).toHaveCount(6);
   expect(await page.locator('#demo-grid .card').evaluateAll((cards) => cards.every((card) => card.getAttribute('data-kind') === 'game'))).toBe(true);
+  await expect(page.locator('#demo-grid .chip-qa-pass')).toHaveCount(6);
+  await expect(page.locator('#demo-grid .chip-qa-active, #demo-grid .chip-qa-changes')).toHaveCount(0);
   await page.locator('#demo-search').fill('no-result-boundary');
   await expect(page.locator('#demo-empty')).toBeVisible();
   await page.getByRole('button', { name: 'Reset demo' }).click();
@@ -113,6 +115,29 @@ test('@claim:guide-explicit sends words only after Ask the guide', async ({ page
   expect(calls).toHaveLength(1);
   expect(calls[0]).toMatchObject({ method: 'POST' });
   expect(JSON.parse(calls[0].body ?? '{}')).toEqual({ query: 'split a restaurant bill' });
+  expect(Number(await page.locator('.guide-panel').getAttribute('data-stream-updates'))).toBeGreaterThan(0);
+});
+
+test('product metadata is bounded while page content and source records stay complete', async ({ page, request }) => {
+  for (const slug of ['how-it-runs', 'voice-riff-loop', 'scan-count-pad']) {
+    const detail = await (await request.get(`/products/${slug}.json`)).json() as Product;
+    await page.goto(`/p/${slug}/`);
+    await expect(page.locator('.product h1')).toHaveText(detail.title);
+    expect((await page.title()).length, `${slug} title length`).toBeLessThanOrEqual(60);
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    expect(description, `${slug} meta description`).toBeTruthy();
+    expect(description!.length, `${slug} description length`).toBeLessThanOrEqual(155);
+    if (slug === 'how-it-runs') expect(`${detail.title} — Hello Factory`.length).toBeGreaterThan(60);
+    else expect((detail.why || detail.description).length, `${slug} source metadata remains full`).toBeGreaterThan(description!.length);
+  }
+});
+
+test('every standard route footer states the catalogue job', async ({ page }) => {
+  const oneLiner = 'Find a focused tool for a specific job, compare its QA state, and open it at its own address.';
+  for (const route of ['/', '/catalog/', '/demo/', '/p/a11y-interaction-trace/', '/privacy/', '/terms/', '/404.html']) {
+    await page.goto(route);
+    await expect(page.locator('footer .footer-job'), route).toHaveText(oneLiner);
+  }
 });
 
 test('@claim:qa-verdicts shows controller verdicts and recorded dates', async ({ page, request }) => {

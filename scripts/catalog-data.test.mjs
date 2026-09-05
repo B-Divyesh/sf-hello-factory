@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { normalizeSnapshot } from './catalog-data.mjs';
 
 describe('controller catalogue publication', () => {
-  it('@claim:snapshot-pictures publishes every current row with its original description, QA record, and a local picture', async () => {
+  it('@claim:snapshot-pictures publishes every current row with its original title, description, QA record, and a local picture', async () => {
     const source = JSON.parse(await readFile('.factory/input/latest-catalog.json', 'utf8'));
     const output = normalizeSnapshot(source);
     const knownCategories = new Set(source.catalog.categories.map((category) => category.id));
@@ -15,10 +15,12 @@ describe('controller catalogue publication', () => {
     expect(output.catalog.products.filter((entry) => entry.image)).toHaveLength(source.catalog.count);
     for (const sourceEntry of source.catalog.products) {
       const product = output.catalog.products.find((entry) => entry.slug === sourceEntry.slug);
+      expect(product.title).toBe(sourceEntry.title);
       expect(product.description).toBe(sourceEntry.description);
       expect(product.why).toBe(sourceEntry.why);
       expect(product.qa).toEqual(sourceEntry.qa);
       expect(product.image).toBe(`/shots/${sourceEntry.slug}.webp`);
+      expect(output.details[sourceEntry.slug].title).toBe(source.details[sourceEntry.slug].title);
       expect(output.details[sourceEntry.slug].description).toBe(source.details[sourceEntry.slug].description);
       expect(output.details[sourceEntry.slug].qa).toEqual(source.details[sourceEntry.slug].qa);
       expect(output.details[sourceEntry.slug].image).toBe(`/shots/${sourceEntry.slug}.webp`);

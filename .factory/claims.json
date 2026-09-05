@@ -1,10 +1,10 @@
 [
   {
     "id": "demo-sandbox",
-    "claim": "The sample catalogue is filled in one click, resets, and saves nothing.",
+    "claim": "The sample shows six released game tools with passed QA, resets, and saves nothing.",
     "where": "landing primary action, demo banner",
     "test": "npm run test:browser -- --grep @claim:demo-sandbox",
-    "sandbox": "fresh phone browser context; six real catalogue rows; change search, reset, leave demo; assert empty browser storage and same-origin requests"
+    "sandbox": "fresh phone browser context; assert six game rows all show passed QA; change search, reset, leave demo; assert empty browser storage and same-origin requests"
   },
   {
     "id": "local-search",
@@ -42,6 +42,13 @@
     "sandbox": "intercept the recommendation endpoint; enter a query; assert no call before the button and exactly one matching POST after it"
   },
   {
+    "id": "guide-stream",
+    "claim": "The guide reads and displays complete matches while its response is still arriving.",
+    "where": "guide results panel",
+    "test": "npm run test:unit -- --testNamePattern @claim:guide-stream",
+    "sandbox": "chunk a recorded recommendation response between two complete picks; assert the first pick is exposed before the response closes and both appear at completion"
+  },
+  {
     "id": "qa-verdicts",
     "claim": "QA badges show the controller verdict and recorded date.",
     "where": "catalogue cards, product detail pages, terms page",
@@ -64,7 +71,7 @@
   },
   {
     "id": "snapshot-pictures",
-    "claim": "Every current product keeps its controller picture, description, and QA record on Hello Factory.",
+    "claim": "Every current product keeps its controller picture, title, description, and QA record on Hello Factory.",
     "where": "featured section, product cards, footer",
     "test": "npm run test:unit -- --testNamePattern @claim:snapshot-pictures",
     "sandbox": "normalize the tracked controller snapshot; assert each supplied image becomes the matching local product and detail image path"

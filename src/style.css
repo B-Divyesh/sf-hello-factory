@@ -262,6 +262,7 @@ h1 { max-width: 16ch; margin-bottom: 18px; font-family: var(--serif); font-size:
 /* Footer */
 footer { margin-top: 40px; padding: 36px var(--gutter); display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; background: var(--ink); color: var(--white); }
 footer p { margin: 0; }
+.footer-job { flex: 1 0 100%; max-width: 70ch; font-family: var(--serif); font-size: 1.1rem; }
 .footer-meta { color: #b9c7c5; font-size: .82rem; }
 .footer-meta a, footer a { color: var(--white); }
 

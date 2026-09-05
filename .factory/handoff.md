@@ -6,7 +6,7 @@ Live URL: <https://hello-factory.sociobot.in>
 
 Implementation deployed: `baf5a314c4c9241ea008bd353269cf5f4f553aca`
 
-Documentation report commit: recorded in the follow-up documentation commit.
+Documentation report commit: `4e215f188af45635756dae57c5e8c043faaa7b25`
 
 ## Outcome
 

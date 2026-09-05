@@ -96,7 +96,7 @@ main { overflow: clip; }
 .store-hero { max-width: var(--max); margin: 0 auto; padding: clamp(36px, 5vw, 72px) var(--gutter) clamp(24px, 3vw, 40px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, .95fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
 h1 { max-width: 16ch; margin-bottom: 18px; font-family: var(--serif); font-size: clamp(2.6rem, 5.4vw, 4.8rem); font-weight: 400; letter-spacing: -.04em; line-height: .98; text-wrap: balance; }
 .lede { max-width: 56ch; margin-bottom: 26px; color: var(--muted); font-size: clamp(1.02rem, 1.3vw, 1.2rem); }
-.catalogue-total { margin: -12px 0 20px; color: var(--ink); font: 700 .85rem var(--mono); }
+.catalogue-total { min-height: 1.5em; margin: -12px 0 20px; color: var(--ink); font: 700 .85rem var(--mono); }
 .hero-action { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 16px; }
 .hero-action span { max-width: 30ch; color: var(--muted); font-size: .9rem; }
 .hero-facts { margin: 0 0 22px; padding: 0; display: flex; flex-wrap: wrap; gap: 7px 18px; list-style: none; color: var(--ink); font-size: .9rem; }
@@ -112,9 +112,9 @@ h1 { max-width: 16ch; margin-bottom: 18px; font-family: var(--serif); font-size:
 .hero-feature .feature-link { display: block; min-width: 0; transform: rotate(-1.4deg); }
 .hero-feature .feature-link img, .hero-feature .feature-link .shot { display: block; width: 100%; height: auto; aspect-ratio: 683 / 427; object-fit: cover; object-position: top; border: 1px solid var(--ink); background: var(--white); box-shadow: 10px 10px 0 var(--sun), 0 30px 60px -30px rgba(22,45,52,.6); }
 .hero-feature .feature-body { padding: 26px 8px 0; }
-.feature h3 { margin: 0 0 6px; font-family: var(--serif); font-size: 1.6rem; font-weight: 400; line-height: 1.1; overflow-wrap: anywhere; }
-.feature h3 a { text-decoration: none; }
-.feature h3 a:hover { text-decoration: underline; text-decoration-color: var(--coral); text-underline-offset: 4px; }
+.feature h2, .feature h3 { margin: 0 0 6px; font-family: var(--serif); font-size: 1.6rem; font-weight: 400; line-height: 1.1; overflow-wrap: anywhere; }
+.feature h2 a, .feature h3 a { text-decoration: none; }
+.feature h2 a:hover, .feature h3 a:hover { text-decoration: underline; text-decoration-color: var(--coral); text-underline-offset: 4px; }
 .feature-body > p { margin: 0 0 12px; color: var(--muted); }
 .feature-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
 .guide-host { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
@@ -291,6 +291,7 @@ footer p { margin: 0; }
   .drum-nav { display: none; }
   .facts > div { grid-template-columns: 1fr; gap: 2px; }
   .guide-form { padding-left: 12px; }
+  .catalogue-total { min-height: 4.5em; }
   .hero-action { align-items: flex-start; flex-direction: column; }
   .hero-facts { display: grid; gap: 6px; }
   .demo-banner { justify-content: flex-start; }

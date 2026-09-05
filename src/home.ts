@@ -6,9 +6,10 @@ import { mountGuide } from './recommend';
 
 /* Home: the store front. Recommendations and shelves only — the full catalogue lives at /catalog/. */
 function featureCard(e: Entry, big = false, eager = big): string {
+  const heading = big ? 'h2' : 'h3';
   return `<article class="feature${big ? ' feature-big' : ''}">
     <a class="feature-link" href="${detailHref(e)}" aria-label="Open the catalogue page for ${esc(e.title)}">${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="${eager ? 'eager' : 'lazy'}" decoding="async">` : `<span class="shot shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}</a>
-    <div class="feature-body"><p class="kicker">${esc(e.category ? (catTitle.get(e.category) ?? '') : '')}</p><h3><a href="${detailHref(e)}">${esc(e.title)}</a></h3><p>${esc(summary(e))}</p>
+    <div class="feature-body"><p class="kicker">${esc(e.category ? (catTitle.get(e.category) ?? '') : '')}</p><${heading}><a href="${detailHref(e)}">${esc(e.title)}</a></${heading}><p>${esc(summary(e))}</p>
       <p class="feature-actions"><a class="btn btn-primary" href="${esc(e.url)}" rel="noopener">Open ${esc(host(e))}<span aria-hidden="true"> ↗</span></a><a class="btn" href="${detailHref(e)}">Details</a></p></div>
   </article>`;
 }
@@ -33,14 +34,14 @@ async function main(): Promise<void> {
   const drumRoot = document.querySelector<HTMLElement>('#drum'); if (drumRoot) mountDrum(drumRoot, picks.slice(0, 12));
   // shelves
   const shelves = document.querySelector<HTMLElement>('#shelves')!;
-  const fresh = justReleased(all, 14);
+  const fresh = justReleased(all, 6);
   const groups = byCategory(all, cats);
   let html = rail('new', 'Just released', 'Verified releases and tools still in their first QA check.', fresh, '/catalog/?release=1&sort=new', justReleased(all, all.length).length);
   const games = gameEntries(all);
-  if (games.length) html += rail('games', 'Games', 'Playable in the browser, no account.', games.slice(0, 14), '/catalog/?kind=game', games.length, { showWhy: true });
-  for (const c of cats) { const items = groups.get(c.id) ?? []; if (!items.length) continue; html += rail(c.id, c.title, c.blurb ?? '', items.slice(0, 14), `/catalog/?cat=${encodeURIComponent(c.id)}`, items.length, { showWhy: true }); }
+  if (games.length) html += rail('games', 'Games', 'Games listed in the catalogue.', games.slice(0, 6), '/catalog/?kind=game', games.length, { showWhy: true });
+  for (const c of cats) { const items = groups.get(c.id) ?? []; if (!items.length) continue; html += rail(c.id, c.title, c.blurb ?? '', items.slice(0, 4), `/catalog/?cat=${encodeURIComponent(c.id)}`, items.length, { showWhy: true }); }
   const unshelved = groups.get('new') ?? [];
-  if (cats.length && unshelved.length) html += rail('unshelved', 'Not yet shelved', 'Released after the last curation pass.', unshelved.slice(0, 14), '/catalog/?cat=new', unshelved.length);
+  if (cats.length && unshelved.length) html += rail('unshelved', 'Not yet shelved', 'Released after the last curation pass.', unshelved.slice(0, 4), '/catalog/?cat=new', unshelved.length);
   shelves.innerHTML = html; wireRails(shelves);
   // counts in the footer band
   const counts = document.querySelector<HTMLElement>('#counts');

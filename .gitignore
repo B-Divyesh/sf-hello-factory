@@ -4,3 +4,5 @@ dist/
 *.log
 graphify-out/
 .DS_Store
+.factory/evidence/playwright-report/
+.factory/evidence/test-results/

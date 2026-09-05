@@ -1,4 +1,4 @@
-import { esc, KIND, type Entry } from './ledger';
+import { esc, KIND, summary, type Entry } from './ledger';
 /* A drum of real first screens — a film-canister carousel. Idle: slow spin. Hover: pointer position flicks through
    the drum. Drag / arrow keys / focus also rotate. Click: open that product in the catalogue. Reduced motion:
    no idle spin, arrows only. Narrow screens: a horizontal scroll strip instead of 3D. */
@@ -6,9 +6,9 @@ export function mountDrum(root: HTMLElement, items: Entry[]): void {
   const n = items.length; if (n < 3) { root.hidden = true; return; }
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   root.innerHTML = `<div class="drum-stage" tabindex="0" aria-roledescription="carousel" aria-label="Showcase of ${n} tools">
-      <ul class="drum">${items.map((e, i) => `<li class="drum-card" style="--i:${i}"><a href="/p/${encodeURIComponent(e.slug)}" aria-label="${esc(e.title)} — open its page">
+      <ul class="drum">${items.map((e, i) => `<li class="drum-card" style="--i:${i}"><a href="/p/${encodeURIComponent(e.slug)}/" aria-label="${esc(e.title)} — open its page">
         ${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="eager" decoding="sync">` : `<span class="shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}
-        <span class="drum-cap"><strong>${esc(e.title)}</strong><span>${esc(e.why || KIND[e.class] || '')}</span></span></a></li>`).join('')}</ul>
+        <span class="drum-cap"><strong>${esc(e.title)}</strong><span>${esc(summary({ why: e.why, description: KIND[e.class] || e.description }))}</span></span></a></li>`).join('')}</ul>
     </div>
     <div class="drum-nav"><button type="button" class="drum-btn" data-dir="-1" aria-label="Previous">←</button><span class="drum-count" aria-live="polite"></span><button type="button" class="drum-btn" data-dir="1" aria-label="Next">→</button></div>`;
   const stage = root.querySelector<HTMLElement>('.drum-stage')!; const drum = root.querySelector<HTMLElement>('.drum')!;

@@ -60,7 +60,7 @@ export function normalizeSnapshot(input) {
 
 function sitemap(catalog) {
   const changed = String(catalog.generated ?? '').slice(0, 10);
-  const urls = ['/', '/catalog/', '/demo/', '/privacy/', '/terms/', ...catalog.products.map((entry) => `/p/${entry.slug}`)];
+  const urls = ['/', '/catalog/', '/demo/', '/privacy/', '/terms/', ...catalog.products.map((entry) => `/p/${entry.slug}/`)];
   const nodes = urls.map((path) => `  <url><loc>${IMAGE_ORIGIN}${path}</loc>${changed ? `<lastmod>${changed}</lastmod>` : ''}</url>`).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${nodes}\n</urlset>\n`;
 }
@@ -111,6 +111,12 @@ export async function publishCatalog({ snapshotPath, outputDirectory, skipImages
   await writeFile(join(outputDirectory, 'products.json'), `${JSON.stringify(normalized.catalog, null, 2)}\n`);
   await Promise.all(Object.entries(normalized.details).map(([slug, detail]) =>
     writeFile(join(outputDirectory, 'products', `${slug}.json`), `${JSON.stringify(detail, null, 2)}\n`)));
+  const productShell = await readFile(join(outputDirectory, 'p', 'index.html'));
+  await Promise.all(normalized.catalog.products.map(async ({ slug }) => {
+    const routeDirectory = join(outputDirectory, 'p', slug);
+    await mkdir(routeDirectory, { recursive: true });
+    await writeFile(join(routeDirectory, 'index.html'), productShell);
+  }));
   await writeFile(join(outputDirectory, 'sitemap.xml'), sitemap(normalized.catalog));
   if (!skipImages) await downloadImages(normalized.images, outputDirectory);
   return { count: normalized.catalog.count, images: Object.keys(normalized.images).length };

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "demo-sandbox",
+    "claim": "The sample catalogue is filled in one click, resets, and saves nothing.",
+    "where": "landing primary action, demo banner",
+    "test": "npm run test:browser -- --grep @claim:demo-sandbox",
+    "sandbox": "fresh phone browser context; six real catalogue rows; change search, reset, leave demo; assert empty browser storage and same-origin requests"
+  },
+  {
+    "id": "local-search",
+    "claim": "Catalogue search stays in your browser.",
+    "where": "landing facts, privacy page",
+    "test": "npm run test:browser -- --grep @claim:local-search",
+    "sandbox": "fresh catalogue; enter a unique product slug; assert the term is not sent in any request and the visible results change"
+  },
+  {
+    "id": "account-free",
+    "claim": "No account is needed to browse.",
+    "where": "landing facts",
+    "test": "npm run test:browser -- --grep @claim:account-free",
+    "sandbox": "fresh catalogue; filter games and open a product detail page; assert no sign-in wall or password field"
+  },
+  {
+    "id": "free-browse",
+    "claim": "Browsing costs £0.",
+    "where": "landing facts",
+    "test": "npm run test:browser -- --grep @claim:free-browse",
+    "sandbox": "fresh catalogue; assert the browse path has no checkout UI and makes no payment or billing request"
+  },
+  {
+    "id": "privacy-defaults",
+    "claim": "Hello Factory sets no cookies, stores no search history, and runs no analytics.",
+    "where": "privacy page",
+    "test": "npm run test:browser -- --grep @claim:privacy-defaults",
+    "sandbox": "fresh browser context; visit privacy and catalogue routes; assert cookies, localStorage, sessionStorage, IndexedDB, and third-party requests remain empty"
+  },
+  {
+    "id": "guide-explicit",
+    "claim": "The guide sends entered words to Sociobot only after Ask the guide is chosen.",
+    "where": "landing guide note, privacy page",
+    "test": "npm run test:browser -- --grep @claim:guide-explicit",
+    "sandbox": "intercept the recommendation endpoint; enter a query; assert no call before the button and exactly one matching POST after it"
+  },
+  {
+    "id": "qa-verdicts",
+    "claim": "QA badges show the controller verdict and recorded date.",
+    "where": "catalogue cards, product detail pages, terms page",
+    "test": "npm run test:browser -- --grep @claim:qa-verdicts",
+    "sandbox": "open released, verifying, and polishing product pages; assert distinct verdict text and exact controller dates or an honest missing-date message"
+  },
+  {
+    "id": "catalogue-truth",
+    "claim": "Catalogue totals, game membership, recent-release membership, defaults, and QA states match the controller snapshot.",
+    "where": "landing counts and shelves, catalogue filters, product pages",
+    "test": "npm run test:browser -- --grep @claim:catalogue-truth",
+    "sandbox": "load the published JSON and compare its count with the first screen, Games shelf and filter, Just released QA badges, and an uncurated product page"
+  },
+  {
+    "id": "snapshot-pictures",
+    "claim": "Product pictures come from the controller snapshot and remain local to Hello Factory.",
+    "where": "featured section, product cards, footer",
+    "test": "npm run test:unit -- --testNamePattern @claim:snapshot-pictures",
+    "sandbox": "normalize the tracked controller snapshot; assert each supplied image becomes the matching local product and detail image path"
+  }
+]

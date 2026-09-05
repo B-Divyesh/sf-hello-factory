@@ -2,4 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://hello-factory.sociobot.in/</loc></url>
   <url><loc>https://hello-factory.sociobot.in/catalog/</loc></url>
+  <url><loc>https://hello-factory.sociobot.in/demo/</loc></url>
+  <url><loc>https://hello-factory.sociobot.in/privacy/</loc></url>
+  <url><loc>https://hello-factory.sociobot.in/terms/</loc></url>
 </urlset>

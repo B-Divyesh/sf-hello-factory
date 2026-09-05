@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { normalizeSnapshot } from './catalog-data.mjs';
 
 describe('controller catalogue publication', () => {
-  it('publishes every controller row with usable kind, shelf, detail, and preserved image paths', async () => {
+  it('@claim:snapshot-pictures publishes every controller row with usable kind, shelf, detail, and preserved image paths', async () => {
     const source = JSON.parse(await readFile('.factory/input/latest-catalog.json', 'utf8'));
     const output = normalizeSnapshot(source);
     const knownCategories = new Set(source.catalog.categories.map((category) => category.id));

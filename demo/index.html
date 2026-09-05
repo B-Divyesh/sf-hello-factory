@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Try a filled Hello Factory catalogue search with a small read-only set of game-night tools." />
+    <meta name="theme-color" content="#f3eee4" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href="https://hello-factory.sociobot.in/demo/" />
+    <title>Demo — Hello Factory</title>
+    <script type="module" src="/src/demo.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the sample catalogue</a>
+    <div class="demo-banner" role="status"><strong>Demo — sample data, nothing is saved</strong><span><button id="reset-demo" type="button">Reset demo</button><a href="/catalog/">Start for real</a></span></div>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Hello Factory, home"><span class="wordmark-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Hello Factory</span></a>
+      <nav aria-label="Primary navigation"><a href="/">Home</a><a href="/catalog/">Catalogue</a><a href="/catalog/?kind=game">Games</a><a href="/demo/" aria-current="page">Demo</a></nav>
+    </header>
+    <main id="main" class="demo-main">
+      <header class="demo-head">
+        <p class="kicker">Sample catalogue search</p>
+        <h1>Find a game-night tool</h1>
+        <p>Use six real catalogue entries to compare formats, prices, and current QA states.</p>
+        <label for="demo-search">Change the sample search</label>
+        <input id="demo-search" type="search" value="plan a game night" autocomplete="off" />
+      </header>
+      <section aria-labelledby="demo-results-title">
+        <div class="section-head"><h2 id="demo-results-title">Sample results</h2><p id="demo-count" aria-live="polite">Loading sample results…</p></div>
+        <ol class="ledger-grid demo-grid" id="demo-grid"></ol>
+        <p class="ledger-empty" id="demo-empty" hidden>No sample result matches. Reset the demo to restore all six.</p>
+      </section>
+    </main>
+    <footer>
+      <p><a href="/">Hello Factory</a> · <a href="/catalog/">Catalogue</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></p>
+      <p class="footer-meta">Built by Param Factory · v1.1.0 · Demo actions do not use browser storage.</p>
+    </footer>
+  </body>
+</html>

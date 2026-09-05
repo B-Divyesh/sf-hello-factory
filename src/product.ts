@@ -1,5 +1,5 @@
 import './style.css';
-import { loadCatalog, loadDetail, esc, KIND, KINDS, rail, wireRails, fmtDate, host, chips, qaVerdict, type Detail } from './ledger';
+import { loadCatalog, loadDetail, esc, KIND, rail, wireRails, fmtDate, host, chips, qaVerdict, summary, type Detail } from './ledger';
 import { related, slugFromPath } from './store';
 
 /* /p/<slug>: one tool's page. Everything on it is a fact from the brief, the curator, or the fleet's check ledger. */
@@ -16,7 +16,7 @@ async function main(): Promise<void> {
   const catTitle = document.querySelector<HTMLElement>('#crumb-cat');
   document.title = `${d.title} — Hello Factory`;
   document.querySelector('meta[name="description"]')?.setAttribute('content', d.why || d.description);
-  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://hello-factory.sociobot.in/p/${d.slug}`);
+  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://hello-factory.sociobot.in/p/${d.slug}/`);
   const checks = d.checks; const qa = qaVerdict(d);
   const parts: string[] = [];
   if (checks?.verify_runs) parts.push(`${checks.verify_runs} verifier run${checks.verify_runs === 1 ? '' : 's'}`);
@@ -27,7 +27,7 @@ async function main(): Promise<void> {
     <div class="product-body">
       ${chips(d)}
       <h1>${esc(d.title)}</h1>
-      <p class="product-lede">${esc(d.why || d.description)}</p>
+      <p class="product-lede">${esc(summary(d))}</p>
       <p class="product-actions"><a class="btn btn-primary btn-lg" href="${esc(d.url)}" rel="noopener">Open ${esc(host(d))}<span aria-hidden="true"> ↗</span><span class="visually-hidden">, external site</span></a></p>
       <dl class="facts">
         <div><dt>Address</dt><dd><a href="${esc(d.url)}" rel="noopener">${esc(host(d))}</a></dd></div>
@@ -45,6 +45,7 @@ async function main(): Promise<void> {
     </div>`;
   const cat = await loadCatalog(); if (!cat) return;
   const cats = new Map((cat.categories ?? []).map((c) => [c.id, c]));
+  cats.set('new', { id: 'new', title: 'Not yet shelved', blurb: 'Listed after the latest curation pass.' });
   const c = d.category ? cats.get(d.category) : undefined;
   if (catTitle && c) { catTitle.textContent = c.title; catTitle.setAttribute('href', `/catalog/?cat=${encodeURIComponent(c.id)}`); }
   document.querySelector<HTMLElement>('#crumb-self')!.textContent = d.title;

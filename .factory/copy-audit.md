@@ -41,7 +41,7 @@ Audited 5 September 2026. Counts split on whitespace. The first screen reads alo
 | 11 | The optional guide sends only the words you enter to Sociobot. |
 | 4 | Read the privacy notice. |
 
-Dynamic count and date templates are 13 words or fewer. Product cards prefer the snapshot's `why` text; all 547 supplied `why` lines are 20 words or fewer. Longer fallback descriptions are shortened at a word boundary to 20 words for cards while the source JSON stays unchanged. No authored landing sentence contains a banned marketing word, and no displayed landing summary exceeds 22 words.
+Dynamic count and date templates are 13 words or fewer. Product cards prefer the snapshot's `why` text; all 525 supplied `why` lines are 20 words or fewer. Longer fallback descriptions are shortened at a word boundary to 20 words for cards while the source JSON stays unchanged. No authored landing sentence contains a banned marketing word, and no displayed landing summary exceeds 22 words.
 
 ## Terminology
 

@@ -1,0 +1,27 @@
+{
+  "sourceSha256": "7354a22219e65acb56dcfd78c7a978b2dfb6aa656611189f0f5d1389a59fdb11",
+  "generated": "2026-09-05T20:45:15.819647Z",
+  "count": 542,
+  "detailsChecked": 542,
+  "routesChecked": 542,
+  "sitemapLocations": 547,
+  "currentPictures": 542,
+  "preservedPicturesChecked": 666,
+  "states": {
+    "POLISHING": 194,
+    "RELEASED": 333,
+    "VERIFYING": 15
+  },
+  "publishedKinds": {
+    "devtool": 119,
+    "extension": 47,
+    "game": 24,
+    "installable": 35,
+    "library": 24,
+    "product": 242,
+    "utility": 51
+  },
+  "gamesWithoutSourceEvidence": 0,
+  "qaMismatches": 0,
+  "invalidPictures": 0
+}

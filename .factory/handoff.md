@@ -1,89 +1,81 @@
-# Hello Factory repair handoff
+# Hello Factory repair 2 handoff
 
 Date: 5 September 2026
 
 Live URL: <https://hello-factory.sociobot.in>
 
-Implementation revision: `e70d1d3aabacc87487725f51ec5d4f7927448b2e`
+Deployed implementation revision: `7ed5fe327bfe16c7b40f0285fdc7d7215eafb537`
 
-Documentation revision: the repository HEAD containing this handoff; it is report-only and was not redeployed.
+Documentation revision: the repository HEAD containing this handoff. This later evidence-only revision was not redeployed.
 
 ## Outcome
 
-Hello Factory now publishes the controller snapshot during every build and presents its catalogue states honestly. The first screen tells a visitor that this is a public tool catalogue, who it is for, and to try the filled sample first.
+Every production build now compiles the UI, fetches the current authorised controller blob, and publishes that exact snapshot afterward. The build stops if a current product lacks a detail or picture, if an image source leaves the allowed Hello Factory paths, or if any downloaded WebP cannot be decoded.
 
-- The Games shelf and `kind=game` filter use the same normalized `kind` field. Both contain 25 entries in the published snapshot.
-- Missing kinds receive deterministic artifact defaults. Missing or unknown categories become **Not yet shelved**.
-- QA badges distinguish **QA passed**, **QA in progress**, and **QA changes required**. Exact controller dates appear where supplied; missing dates are named as missing.
-- **Just released** includes `RELEASED` and `VERIFYING`, prioritizes items still being checked, and excludes `POLISHING`.
-- The build publishes `products.json`, 601 detail records, 601 physical product routes, the sitemap, and all 677 supplied pictures.
-- The one-click `/demo/` route has six realistic game-night entries, a persistent sample label, reset and exit actions, and no persistent storage.
-- Privacy, terms, route metadata, designed 404 handling, keyboard focus, reduced motion, and responsive layouts are complete.
+The deployed snapshot is generated `2026-09-05T20:45:15.819647Z` with SHA-256 `7354a22219e65acb56dcfd78c7a978b2dfb6aa656611189f0f5d1389a59fdb11`.
 
-The established paper-and-ink visual identity and existing product pictures were preserved. The social preview is a hand-authored composition described in `.factory/design.md`.
+- 542 products, 542 detail records, and 547 sitemap URLs
+- 542 current product pictures and 666 preserved pictures in total
+- States: 333 released, 15 verifying, and 194 polishing
+- Published kinds: 119 developer tools, 47 extensions, 24 games, 35 installable tools, 24 libraries, 242 products, and 51 utilities
+- 24 Games entries, all backed by the source's explicit game kind
+- 11 missing source kinds and categories resolved with conservative defaults; creative audio tools are no longer inferred to be games
+- Source QA objects and dates preserved on every product and detail record
 
-## Controller snapshot
+Seven selected pictures came from private URLs in the authorised snapshot. They were downloaded with the existing Blob login without printing or storing a credential. All 666 public image endpoints returned decodable WebP images after deployment.
 
-- Source generated: `2026-09-05T19:25:37.810080Z`
-- Tracked input: `.factory/input/latest-catalog.json`
-- SHA-256: `554aacd5a7f74f12fd791f328ea0023444bd362e6ffa431a818a06ca384da29f`
-- Catalogue: 601 products and 601 detail records
-- States: 313 `RELEASED`, 75 `VERIFYING`, 213 `POLISHING`
-- Supplied pictures: 677; 574 belong to current products and 103 historical pictures remain preserved
-- Source omissions: 48 kinds and 48 categories. Build defaults resolve every omission without changing snapshot descriptions.
+## Repair details
 
-`scripts/fetch-catalog.sh` fetches only the authorized controller blob. `scripts/catalog-data.mjs` accepts pictures only from this product or the exact `hello-factory-repair-1/input/shots` prefix. Credentials are neither printed nor stored.
+- Replaced the manual fetch step with an atomic, fixed-blob fetch in `scripts/snapshot-data.mjs`.
+- Added `catalog:refresh` after Vite compilation in the production `build` command.
+- Added `catalog-build.json` with the exact source hash, generation time, count, state totals, source-kind totals, published-kind totals, and picture counts.
+- Added a post-publish verifier for the catalogue, every detail, every physical product route, the sitemap, and every image.
+- Added a stale-artifact regression that proves the refresh replaces old JSON, details, routes, sitemap, and summary files.
+- Kept browser tests deterministic with `build:test`; production `build` is always the network-backed fresh path.
+- Topped the sample back up to six source-marked games after a preferred entry left the catalogue.
+- Removed inline event handlers and raised rendered interactive targets to at least 44×44 px.
+
+The established paper, ink, framed-screen visual system and all controller pictures were preserved.
 
 ## Verification
 
-From a clean clone of the implementation revision:
+From a clean clone of the deployed revision:
 
 ```sh
 npm ci --ignore-scripts
 npm test
-npm run build
 ```
 
-- Unit suite: 13 passed.
-- Browser suite: 16 passed, including axe checks on landing, catalogue, demo, privacy, terms, 404, and a product route.
-- Every one of the nine commands in `.factory/claims.json` passed independently from `/tmp/hello-factory-final-kQLbPF`.
-- Clean build published 601 catalogue entries and preserved 677 pictures.
-- `dist/` application assets: 24.09 KB CSS and 24.87 KB JavaScript before gzip across all route chunks; each route loads only its needed chunks.
+The unit suite passed 17 tests. The browser suite passed 16 tests. Every command in `.factory/claims.json` was then run separately and passed.
 
-After deploying the implementation revision to the existing `sf-hello-factory` production Static Web App:
+The final production artifact was built with:
 
-- `/opt/fleet/lib/verify-url.sh` returned HTTPS 200, one H1, one main landmark, valid language/title/alt text, and no console errors.
-- Fresh desktop and phone contexts showed the job, audience, and **Try it with sample data** before scrolling, with no horizontal overflow or external request.
-- The live sample loaded six entries, showed the persistent sample label, recovered from a no-results boundary, reset to six, exited to `/catalog/`, and left cookies, local/session storage, and IndexedDB empty.
-- Live axe scans found zero serious or critical issues on all six checked routes.
-- The designed unknown route returned the expected HTTP 404 with its correct title and H1.
-- Mobile Lighthouse: performance 100, accessibility 100, best practices 100, SEO 100; LCP 1.0 s, CLS 0, TBT 30 ms.
-- Lighthouse transferred 7,275 bytes of JavaScript, 5,953 bytes of CSS, and 67,600 bytes of images on first load.
+```sh
+npm run build
+npm run catalog:verify
+```
 
-Evidence is in `.factory/evidence/live-final/`. Detailed finding disposition is in `.factory/repair-verification.md`.
+The final build fetched the deployed snapshot after compiling the UI, downloaded 666 pictures, and passed the exact artifact verifier. The generated application contains 24.25 KB CSS and 24.83 KB JavaScript before gzip across route chunks.
 
-## Deployment
+Cold live verification found:
 
-The generated `dist/` directory was deployed to the existing production environment for `sf-hello-factory`. No DNS, billing, shared service, database, or other product was read or changed. This product is a read-only static catalogue, so SQLite, restart persistence, tenant isolation, and backend 429 behavior do not apply.
+- HTTPS 200, one H1, one main landmark, valid language and titles, no missing image alternatives, and no console errors
+- the job, audience, and **Try it with sample data** action visible before scrolling on 1366×900 desktop and 390×844 phone
+- six source-marked game entries in the sample, a persistent sample label, empty-state recovery, reset, exit, no cookies or browser storage, and no catalogue mutation
+- zero serious or critical axe findings on landing, catalogue, demo, privacy, terms, 404, and product routes
+- zero undersized interactive targets or horizontal overflow on those phone routes; 200% text remained usable without horizontal overflow
+- a deliberate unknown URL returned the designed HTTP 404
+- all 542 details, 542 physical routes, 547 sitemap locations, and 666 picture endpoints agreed with the exact deployed snapshot
+- Lighthouse mobile: 100 performance, 100 accessibility, 100 best practices, and 100 SEO; LCP 1.27 s, CLS 0, TBT 47 ms
 
-## Known dependencies and gaps
+Evidence is in `.factory/evidence/repair-2-live/`. Full finding disposition is in `.factory/repair-2-verification.md`.
 
-- The optional guide depends on the existing `api.sociobot.in/api/v1/products/recommend` endpoint. Catalogue search, browsing, details, and the sample do not depend on it; the UI gives a local fallback when it fails.
-- Twenty-seven current products have no supplied picture. They use the existing typographic placeholder; no picture was invented.
-- Forty-eight source rows were not assigned a curated shelf. They are shown honestly under **Not yet shelved**.
-- Offline use is not promised and no service worker is installed.
+## Earlier and independent review
 
-## Independent verification 2
+The complete earlier reports remain in `.factory/verification.md`, `.factory/repair-verification.md`, and `.factory/verification-2.md`. The latest independent report available before this work order recorded PASS with zero findings against implementation `e70d1d3`, but it verified the now-superseded 601-row snapshot. The controller's later stale-snapshot finding is the reason for this repair and is now fixed at the build boundary.
 
-Date: 5 September 2026
+## Deployment and remaining dependencies
 
-Implementation reviewed: `e70d1d3aabacc87487725f51ec5d4f7927448b2e`
-Documentation reviewed: `39306eaf5e9f45868ffb2d6e90c25934b750c0db`
+The final `dist/` artifact was uploaded directly to the existing production environment for `sf-hello-factory`. The deployment did not run another build, use a cached snapshot, alter DNS, access a staging slot, or touch another product.
 
-**PASS — 0 findings and 0 untested public claims.**
-
-An independent verifier used a fresh clone, ran `npm ci`, `npm test`, `npm run build`, and every one of the nine claim commands separately. The unit suite passed 13 tests and the browser suite passed 16 tests.
-
-Fresh live desktop and phone contexts showed the job, audience, and **Try it with sample data** before scrolling. The live demo loaded six sample entries, kept its persistent label, reset, exited to the real catalogue, and left cookies and browser storage empty. The URL verifier found HTTPS 200, no console errors, valid language/title structure, one H1, one main landmark, image alternatives, and labeled buttons. Axe found no serious or critical issues on the landing, catalogue, demo, legal, 404, and product routes. The designed unknown route correctly returned HTTP 404.
-
-Fresh mobile Lighthouse measured 100 performance, 100 accessibility, 100 best practices, and 100 SEO (LCP 0.91 s, CLS 0, TBT 7 ms). Earlier repair findings, including catalogue truth, QA states, first-screen clarity, sample isolation, legal routes, and accessibility, were all verified as fixed. The full report is `.factory/verification-2.md`.
+The optional guide still depends on `api.sociobot.in/api/v1/products/recommend`. Search, filters, details, pictures, and the sample work without it. Offline use is not promised. This is a read-only static product, so SQLite, tenant isolation, restart persistence, health endpoints, and backend 429 handling do not apply.

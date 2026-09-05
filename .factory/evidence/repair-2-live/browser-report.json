@@ -1,0 +1,128 @@
+{
+  "desktop": {
+    "job": "Find a small tool for a specific job",
+    "audience": "For people with a task to finish, search the factory’s public catalogue and open a matching tool.",
+    "action": "Try it with sample data",
+    "jobVisible": true,
+    "audienceVisible": true,
+    "actionVisible": true,
+    "overflow": 0,
+    "errors": [],
+    "outsideRequests": []
+  },
+  "phone": {
+    "job": "Find a small tool for a specific job",
+    "audience": "For people with a task to finish, search the factory’s public catalogue and open a matching tool.",
+    "action": "Try it with sample data",
+    "jobVisible": true,
+    "audienceVisible": true,
+    "actionVisible": true,
+    "overflow": 0,
+    "errors": [],
+    "outsideRequests": []
+  },
+  "demo": {
+    "initial": 6,
+    "gameOnly": true,
+    "label": true,
+    "empty": true,
+    "resetCount": 6,
+    "resetQuery": "plan a game night",
+    "storage": {
+      "local": 0,
+      "session": 0,
+      "databases": 0
+    },
+    "cookies": 0,
+    "exited": true,
+    "catalogueUnchanged": true,
+    "errors": [],
+    "outsideRequests": []
+  },
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "Hello Factory — find a tool for a specific job",
+      "h1": 1,
+      "main": 1,
+      "seriousCritical": 0,
+      "undersizedTargets": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/catalog/",
+      "status": 200,
+      "title": "All tools — Catalogue · Hello Factory",
+      "h1": 1,
+      "main": 1,
+      "seriousCritical": 0,
+      "undersizedTargets": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/demo/",
+      "status": 200,
+      "title": "Demo — Hello Factory",
+      "h1": 1,
+      "main": 1,
+      "seriousCritical": 0,
+      "undersizedTargets": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/privacy/",
+      "status": 200,
+      "title": "Privacy — Hello Factory",
+      "h1": 1,
+      "main": 1,
+      "seriousCritical": 0,
+      "undersizedTargets": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/terms/",
+      "status": 200,
+      "title": "Terms — Hello Factory",
+      "h1": 1,
+      "main": 1,
+      "seriousCritical": 0,
+      "undersizedTargets": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/404.html",
+      "status": 200,
+      "title": "Page not found — Hello Factory",
+      "h1": 1,
+      "main": 1,
+      "seriousCritical": 0,
+      "undersizedTargets": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/p/a11y-interaction-trace/",
+      "status": 200,
+      "title": "A11y Interaction Trace — Hello Factory",
+      "h1": 1,
+      "main": 1,
+      "seriousCritical": 0,
+      "undersizedTargets": 0,
+      "overflow": 0
+    }
+  ],
+  "reducedMotionStable": true,
+  "resize200": {
+    "overflow": 0,
+    "actionVisible": true
+  },
+  "auditErrors": [],
+  "auditOutsideRequests": [],
+  "keyboard": {
+    "firstFocus": true,
+    "outline": "3px",
+    "primaryFocused": true,
+    "enterOpenedDemo": true,
+    "errors": []
+  }
+}

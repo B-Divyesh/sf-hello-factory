@@ -28,7 +28,7 @@ export function fillDefaults(e: Entry): void {
 }
 export function picture(e: Entry, cls = 'shot', eager = false): string {
   return e.image
-    ? `<span class="${cls}"><img src="${esc(e.image)}" alt="" width="683" height="427" loading="${eager ? 'eager' : 'lazy'}" decoding="async"></span>`
+    ? `<span class="${cls}"><img src="${esc(e.image)}" alt="" width="683" height="427" loading="${eager ? 'eager' : 'lazy'}" decoding="${eager ? 'auto' : 'async'}"></span>`
     : `<span class="${cls} shot-empty" aria-hidden="true"><b>${esc(e.title.slice(0, 1))}</b><i>${esc(KIND[e.class] ?? e.class)}</i></span>`;
 }
 export function host(e: Pick<Entry, 'url'>): string { return e.url.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
@@ -47,16 +47,17 @@ export function card(e: Entry, opts: { showWhy?: boolean; compact?: boolean; eag
 export function rail(id: string, title: string, blurb: string, items: Entry[], seeAll: string, total: number, opts: { showWhy?: boolean } = {}): string {
   if (!items.length) return '';
   return `<section class="rail" aria-labelledby="rail-${esc(id)}">
-    <div class="rail-head"><div><h2 id="rail-${esc(id)}">${esc(title)}</h2>${blurb ? `<p>${esc(blurb)}</p>` : ''}</div><a class="see-all" href="${esc(seeAll)}">See all ${total}<span aria-hidden="true"> →</span></a></div>
-    <div class="rail-scroller"><ol class="rail-track">${items.map((e, i) => card(e, { compact: true, showWhy: opts.showWhy, eager: i < 4 })).join('')}</ol><button type="button" class="rail-btn rail-prev" aria-label="Scroll ${esc(title)} back">←</button><button type="button" class="rail-btn rail-next" aria-label="Scroll ${esc(title)} forward">→</button></div>
+    <div class="rail-head"><div><h2 id="rail-${esc(id)}">${esc(title)}</h2>${blurb ? `<p>${esc(blurb)}</p>` : ''}</div><div class="rail-nav"><button type="button" class="rail-btn rail-prev" aria-label="Scroll ${esc(title)} back">←</button><button type="button" class="rail-btn rail-next" aria-label="Scroll ${esc(title)} forward">→</button><a class="see-all" href="${esc(seeAll)}">See all ${total}<span aria-hidden="true"> →</span></a></div></div>
+    <div class="rail-scroller"><ol class="rail-track">${items.map((e, i) => card(e, { compact: true, showWhy: opts.showWhy, eager: i < 4 })).join('')}</ol></div>
   </section>`;
 }
 export function wireRails(root: ParentNode): void {
-  root.querySelectorAll<HTMLElement>('.rail-scroller').forEach((s) => {
-    const track = s.querySelector<HTMLElement>('.rail-track'); if (!track) return;
-    const update = (): void => { s.classList.toggle('at-start', track.scrollLeft < 8); s.classList.toggle('at-end', track.scrollLeft + track.clientWidth >= track.scrollWidth - 8); };
-    s.querySelector('.rail-prev')?.addEventListener('click', () => track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' }));
-    s.querySelector('.rail-next')?.addEventListener('click', () => track.scrollBy({ left: track.clientWidth * 0.8, behavior: 'smooth' }));
+  root.querySelectorAll<HTMLElement>('.rail').forEach((r) => {
+    const track = r.querySelector<HTMLElement>('.rail-track'); const prev = r.querySelector<HTMLButtonElement>('.rail-prev'); const next = r.querySelector<HTMLButtonElement>('.rail-next');
+    if (!track || !prev || !next) return;
+    const update = (): void => { prev.disabled = track.scrollLeft < 8; next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8; };
+    prev.addEventListener('click', () => track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: track.clientWidth * 0.8, behavior: 'smooth' }));
     track.addEventListener('scroll', update, { passive: true }); addEventListener('resize', update); update();
   });
 }

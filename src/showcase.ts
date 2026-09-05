@@ -7,7 +7,7 @@ export function mountDrum(root: HTMLElement, items: Entry[]): void {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   root.innerHTML = `<div class="drum-stage" tabindex="0" aria-roledescription="carousel" aria-label="Showcase of ${n} tools">
       <ul class="drum">${items.map((e, i) => `<li class="drum-card" style="--i:${i}"><a href="/p/${encodeURIComponent(e.slug)}" aria-label="${esc(e.title)} — open its page">
-        ${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async">` : `<span class="shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}
+        ${e.image ? `<img src="${esc(e.image)}" alt="" width="683" height="427" loading="eager" decoding="sync">` : `<span class="shot-empty"><b>${esc(e.title.slice(0, 1))}</b></span>`}
         <span class="drum-cap"><strong>${esc(e.title)}</strong><span>${esc(e.why || KIND[e.class] || '')}</span></span></a></li>`).join('')}</ul>
     </div>
     <div class="drum-nav"><button type="button" class="drum-btn" data-dir="-1" aria-label="Previous">←</button><span class="drum-count" aria-live="polite"></span><button type="button" class="drum-btn" data-dir="1" aria-label="Next">→</button></div>`;
@@ -19,7 +19,7 @@ export function mountDrum(root: HTMLElement, items: Entry[]): void {
   const front = (): number => ((Math.round(-angle / step) % n) + n) % n;
   const paint = (): void => {
     drum.style.transform = `translateZ(${-radius}px) rotateY(${angle}deg)`;
-    cards.forEach((c, i) => { const rel = ((i * step + angle) % 360 + 540) % 360 - 180; const k = Math.cos(rel * Math.PI / 180); c.style.opacity = String(0.25 + 0.75 * Math.max(0, (k + 0.25) / 1.25)); c.style.zIndex = String(Math.round(100 + k * 100)); c.classList.toggle('is-front', Math.abs(rel) < step / 2); });
+    cards.forEach((c, i) => { const rel = ((i * step + angle) % 360 + 540) % 360 - 180; const k = Math.cos(rel * Math.PI / 180); const away = Math.abs(rel) > 80; c.style.opacity = away ? '0' : String(0.35 + 0.65 * Math.max(0, (k + 0.25) / 1.25)); c.style.pointerEvents = away ? 'none' : ''; c.style.visibility = away ? 'hidden' : ''; c.style.zIndex = String(Math.round(100 + k * 100)); c.classList.toggle('is-front', Math.abs(rel) < step / 2); });
     const f = front(); count.textContent = `${f + 1} / ${n} · ${items[f].title}`;
   };
   const tick = (now: number): void => {

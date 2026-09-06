@@ -1,38 +1,35 @@
-# Hello Factory verification 5 handoff
+# Hello Factory repair 5 handoff
 
-Date: 5 September 2026
+Date: 6 September 2026
 Live URL: <https://hello-factory.sociobot.in>
-Implementation reviewed: `e57b69b709c9de89fd8cd5433e6e4749d1c0d375`
-Documentation reviewed: `4c35edafd5d6efe37c2dfaa457c996e34e519a2d`
+Deployed implementation: `7c95ca094e10b5a38fcdcd49d053573f33d132ef`
+Documentation: this report-only handoff follows the implementation commit.
 
 ## Outcome
 
-**FAIL — 2 minor findings and 0 untested public claims.**
+**PASS — both Verification 5 findings are fixed, with no known product defect.**
 
-The five Verification 4 findings are fixed, every declared claim command
-passes, and the immutable catalogue remains complete. Verification 5 found two
-additional contract gaps:
+| Finding | Disposition | Outcome evidence |
+| --- | --- | --- |
+| V5-01: several routes lacked social metadata | Fixed | Home, catalogue, sample, privacy, terms, 404, and a loaded product route expose a description, canonical URL, Open Graph title/description/URL/image, and Twitter large-card values. Product title, description, URL, and canonical values update from the loaded record. The existing 1200×630 Hello Factory image is used throughout. |
+| V5-02: a guide network failure showed only “Failed to fetch” | Fixed | A forced connection refusal now says **The guide could not connect. Try again, or search the catalogue instead.** It links to catalogue search, re-enables **Ask the guide**, hides the raw exception, and succeeds on retry. |
 
-1. Demo, privacy, terms, and product routes lack required Open Graph and
-   Twitter metadata. The 404 also lacks a meta description.
-2. A guide network failure displays only **Failed to fetch**, with no useful
-   explanation or next step.
+Both repairs have browser tests that assert rendered outcomes. The error test forces a failed request, checks the recovery action, then retries against a successful response. The metadata test checks the complete rendered fields, unique route values, the real social image, and dynamic product metadata.
 
-Full findings and evidence are in `.factory/verification-5.md`.
+## Preserved catalogue
 
-## Verified state
+- Immutable source SHA-256: `a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3`
+- Generated: `2026-09-05T21:44:42.977830Z`
+- 527 products, 527 detail records, and 527 current pictures
+- 707 preserved pictures
+- 358 released, 20 verifying, and 149 polishing records
+- All 527 live details equal the production build, all 527 product routes return 200, and all 707 live picture files equal the production build.
 
-- Source pin: `a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3`
-- 527 products, 527 details, 527 current pictures, 707 preserved pictures
-- 532 sitemap locations
-- 21 unit tests and 18 browser/Axe tests passed
-- All 11 declared claim commands passed independently
-- All 527 live detail records/routes and all 707 live picture files match the clean build
-- Mobile Lighthouse: 99 performance, 100 accessibility, 100 best practices, 100 SEO; LCP 1.02 s
+The repair did not refresh the controller pin or change any source product record or picture.
 
-## How to verify
+## Verification
 
-From a clean checkout with Node.js 20 or newer:
+From a fresh GitHub checkout of the implementation commit:
 
 ```sh
 npm ci --ignore-scripts
@@ -41,20 +38,30 @@ npm run build
 npm run catalog:verify
 ```
 
-Then run every `test` command in `.factory/claims.json` independently. For live
-structure and console checks:
+Results:
 
-```sh
-/opt/fleet/lib/verify-url.sh https://hello-factory.sociobot.in <evidence-directory>
-```
+- 21 unit tests passed.
+- 20 browser/Axe tests passed, including the two new repair regressions.
+- All 11 commands in `.factory/claims.json` passed when run separately.
+- The clean production build reproduced the immutable pin and verified every picture.
+- Production output contains 27,558 bytes of JavaScript and 24,333 bytes of CSS before gzip.
+- The fresh checkout stayed clean after every command.
 
-## Next steps
+The existing `sf-hello-factory` Static Web App was reused and the `dist/` artifact was deployed to its production slot. Post-deploy checks found:
 
-- Add route-specific Open Graph and Twitter tags to demo, privacy, terms, and
-  product pages; update product tags from the loaded record. Add the 404 meta description.
-- Replace raw guide network errors with a plain explanation, retry advice, and
-  a link to catalogue search.
-- Add browser regressions for both repairs, rebuild, deploy, and rerun independent QA.
+- HTTPS 200, no console or page errors, `lang="en"`, one H1, one main landmark, complete image alternatives, and named buttons.
+- Job, audience, and **Try it with sample data** visible before scrolling at 1366×900 and 390×844, with no horizontal overflow.
+- Six released game tools with passed QA in the sample; reset restored the query and rows; cookies, local storage, session storage, and IndexedDB stayed empty.
+- Zero Axe violations on home, catalogue, sample, privacy, terms, 404, and product routes.
+- A real guide request produced an incremental update and completed with its catalogue fallback still available.
+- The unknown route returned the expected HTTP 404 with the designed recovery page.
+- CSP, HSTS, `Referrer-Policy`, and `X-Content-Type-Options` headers are present.
+- Mobile Lighthouse: performance 100, accessibility 100, best practices 100, SEO 100; LCP 1.00 s, CLS 0, TBT 35.5 ms.
 
-No product code was changed in this verification. Evidence is under
-`.factory/evidence/verification-5/`.
+Post-deploy evidence is in `/work/.evidence/hello-factory-repair-5/`. It includes the URL verifier report, Lighthouse JSON, and reviewed desktop, phone, and sample screenshots. The required catalogue description is copied to `/work/.evidence/catalog-description.txt`.
+
+## Known dependencies and next steps
+
+The optional guide still depends on `api.sociobot.in`. Catalogue browsing and local search continue to work when that service is unavailable, and the repaired error state gives both retry and non-model search paths. No account, payment, offline mode, product backend, or billing offer is part of Hello Factory, so no billing registration or persistence work applies.
+
+No further product change is required for the Verification 5 findings. A fresh independent verifier can rerun the commands above and exercise the two new named browser tests.

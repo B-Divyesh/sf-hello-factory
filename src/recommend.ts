@@ -61,7 +61,9 @@ export async function readRecommendationStream(response: Response, onProgress: (
     await letBrowserPaint();
   }
   text += decoder.decode();
-  const reply = JSON.parse(text) as GuideReply;
+  let reply: GuideReply;
+  try { reply = JSON.parse(text) as GuideReply; }
+  catch { throw new Error('The guide returned an unreadable reply.'); }
   if (!Array.isArray(reply.picks)) throw new Error('The guide returned an unreadable reply.');
   return reply;
 }
@@ -100,7 +102,12 @@ export function mountGuide(form: HTMLFormElement, input: HTMLInputElement, host:
       panel.querySelector('.guide-close')?.addEventListener('click', () => { panel.hidden = true; });
     } catch (err) {
       panel.setAttribute('aria-busy', 'false');
-      panel.innerHTML = `<p class="kicker">The guide</p><p class="guide-status">${esc((err as Error).message)}</p>`;
+      const message = err instanceof Error && err.message.startsWith('The guide ')
+        ? err.message
+        : 'The guide could not connect.';
+      panel.innerHTML = `<p class="kicker">The guide</p><h3>${esc(message)}</h3>
+        <p class="guide-status">Try again, or search the catalogue instead.</p>
+        <p class="ledger-foot"><a href="/catalog/">Search the catalogue</a></p>`;
     } finally { busy = false; btn.disabled = false; }
   };
   btn.addEventListener('click', ask);

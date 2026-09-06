@@ -118,6 +118,80 @@ test('@claim:guide-explicit sends words only after Ask the guide', async ({ page
   expect(Number(await page.locator('.guide-panel').getAttribute('data-stream-updates'))).toBeGreaterThan(0);
 });
 
+test('guide network failures explain recovery and allow a retry', async ({ page }) => {
+  const endpoint = 'https://api.sociobot.in/api/v1/products/recommend';
+  await page.route(endpoint, (route) => route.abort('connectionrefused'));
+  await page.goto('/');
+  await page.locator('#guide-input').fill('split a restaurant bill');
+  await page.getByRole('button', { name: 'Ask the guide' }).click();
+
+  const panel = page.locator('.guide-panel');
+  await expect(panel).toContainText('The guide could not connect.');
+  await expect(panel).toContainText('Try again, or search the catalogue instead.');
+  await expect(panel.getByRole('link', { name: 'Search the catalogue' })).toHaveAttribute('href', '/catalog/');
+  await expect(panel).not.toContainText('Failed to fetch');
+  await expect(page.getByRole('button', { name: 'Ask the guide' })).toBeEnabled();
+
+  await page.unroute(endpoint);
+  await page.route(endpoint, (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ picks: [], note: 'No close match in this sample.' }),
+  }));
+  await page.getByRole('button', { name: 'Ask the guide' }).click();
+  await expect(panel).toContainText('Nothing in the catalogue fits');
+});
+
+test('every public route exposes complete route-specific social metadata', async ({ page, request }) => {
+  const routes = ['/', '/catalog/', '/demo/', '/privacy/', '/terms/', '/404.html'];
+  const socialTitles = new Set<string>();
+  const descriptions = new Set<string>();
+  for (const route of routes) {
+    await page.goto(route);
+    const title = await page.title();
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    const openGraphTitle = await page.locator('meta[property="og:title"]').getAttribute('content');
+    const openGraphDescription = await page.locator('meta[property="og:description"]').getAttribute('content');
+    const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
+    const openGraphUrl = await page.locator('meta[property="og:url"]').getAttribute('content');
+
+    expect(description, `${route} description`).toBeTruthy();
+    expect(description!.length, `${route} description length`).toBeLessThanOrEqual(155);
+    expect(title, `${route} document title`).toBeTruthy();
+    expect(openGraphTitle, `${route} Open Graph title`).toBeTruthy();
+    expect(openGraphTitle!.length, `${route} Open Graph title length`).toBeLessThanOrEqual(60);
+    expect(openGraphDescription, `${route} Open Graph description`).toBeTruthy();
+    expect(await page.locator('meta[property="og:type"]').getAttribute('content')).toBe('website');
+    expect(new URL(canonical!).pathname, `${route} canonical`).toBe(route);
+    expect(new URL(openGraphUrl!).pathname, `${route} Open Graph URL`).toBe(route);
+    expect(await page.locator('meta[property="og:image"]').getAttribute('content')).toBe('https://hello-factory.sociobot.in/og-hello-factory.png');
+    expect(await page.locator('meta[property="og:image:width"]').getAttribute('content')).toBe('1200');
+    expect(await page.locator('meta[property="og:image:height"]').getAttribute('content')).toBe('630');
+    expect(await page.locator('meta[name="twitter:card"]').getAttribute('content')).toBe('summary_large_image');
+    expect(await page.locator('meta[name="twitter:title"]').getAttribute('content')).toBe(openGraphTitle);
+    expect(await page.locator('meta[name="twitter:description"]').getAttribute('content')).toBe(openGraphDescription);
+    expect(await page.locator('meta[name="twitter:image"]').getAttribute('content')).toBe('https://hello-factory.sociobot.in/og-hello-factory.png');
+    socialTitles.add(openGraphTitle!);
+    descriptions.add(openGraphDescription!);
+  }
+  expect(socialTitles.size).toBe(routes.length);
+  expect(descriptions.size).toBe(routes.length);
+  const image = await request.get('/og-hello-factory.png');
+  expect(image.status()).toBe(200);
+  expect(image.headers()['content-type']).toBe('image/png');
+
+  await page.goto('/p/a11y-interaction-trace/');
+  await expect(page.locator('.product h1')).toBeVisible();
+  const productTitle = await page.title();
+  const productDescription = await page.locator('meta[name="description"]').getAttribute('content');
+  expect(await page.locator('meta[property="og:title"]').getAttribute('content')).toBe(productTitle);
+  expect(await page.locator('meta[name="twitter:title"]').getAttribute('content')).toBe(productTitle);
+  expect(await page.locator('meta[property="og:description"]').getAttribute('content')).toBe(productDescription);
+  expect(await page.locator('meta[name="twitter:description"]').getAttribute('content')).toBe(productDescription);
+  expect(new URL((await page.locator('link[rel="canonical"]').getAttribute('href'))!).pathname).toBe('/p/a11y-interaction-trace/');
+  expect(new URL((await page.locator('meta[property="og:url"]').getAttribute('content'))!).pathname).toBe('/p/a11y-interaction-trace/');
+});
+
 test('product metadata is bounded while page content and source records stay complete', async ({ page, request }) => {
   for (const slug of ['how-it-runs', 'voice-riff-loop', 'scan-count-pad']) {
     const detail = await (await request.get(`/products/${slug}.json`)).json() as Product;

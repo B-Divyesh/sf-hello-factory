@@ -5,6 +5,9 @@ import { productDocumentTitle, productMetaDescription } from './metadata';
 
 /* /p/<slug>: one tool's page. Everything on it is a fact from the brief, the curator, or the fleet's check ledger. */
 function para(s?: string): string { return s ? s.trim().split(/\n{2,}|\n(?=[-•*] )/).filter(Boolean).map((p) => `<p>${esc(p.trim())}</p>`).join('') : ''; }
+function setMeta(selector: string, content: string): void {
+  document.querySelector<HTMLMetaElement>(selector)?.setAttribute('content', content);
+}
 async function main(): Promise<void> {
   const slug = slugFromPath(location.pathname, location.search);
   const root = document.querySelector<HTMLElement>('#product')!;
@@ -15,9 +18,17 @@ async function main(): Promise<void> {
     return;
   }
   const catTitle = document.querySelector<HTMLElement>('#crumb-cat');
-  document.title = productDocumentTitle(d.title);
-  document.querySelector('meta[name="description"]')?.setAttribute('content', productMetaDescription(d.why || d.description));
-  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', `https://hello-factory.sociobot.in/p/${d.slug}/`);
+  const title = productDocumentTitle(d.title);
+  const description = productMetaDescription(d.why || d.description);
+  const url = `https://hello-factory.sociobot.in/p/${d.slug}/`;
+  document.title = title;
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[property="og:url"]', url);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', description);
+  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', url);
   const checks = d.checks; const qa = qaVerdict(d);
   const parts: string[] = [];
   if (checks?.verify_runs) parts.push(`${checks.verify_runs} verifier run${checks.verify_runs === 1 ? '' : 's'}`);

@@ -14,6 +14,9 @@ Audited 5 September 2026. Counts split on whitespace. The first screen reads alo
 | 6 | Catalogue search stays in your browser. |
 | 6 | Describe a problem for the guide |
 | 12 | The guide sends your words to Sociobot only when you ask it. |
+| 5 | The guide could not connect. |
+| 7 | Try again, or search the catalogue instead. |
+| 3 | Search the catalogue |
 | 4 | Browse the whole catalogue |
 | 1 | Featured |
 | 5 | Selected by the catalogue curator. |
@@ -42,7 +45,7 @@ Audited 5 September 2026. Counts split on whitespace. The first screen reads alo
 | 4 | Read the privacy notice. |
 | 19 | Find a focused tool for a specific job, compare its QA state, and open it at its own address. |
 
-Dynamic count, date, and guide-progress templates are 13 words or fewer. The pinned source has 527 products and 507 non-empty `why` lines. All 507 `why` lines are 20 words or fewer. Longer fallback descriptions are shortened at a word boundary to 20 words for cards while the source JSON stays unchanged. These counts come from source `a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3`. No authored landing sentence contains a banned marketing word, and no displayed landing summary exceeds 22 words.
+Dynamic count, date, guide-progress, and guide-error templates are 13 words or fewer. The pinned source has 527 products and 507 non-empty `why` lines. All 507 `why` lines are 20 words or fewer. Longer fallback descriptions are shortened at a word boundary to 20 words for cards while the source JSON stays unchanged. These counts come from source `a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3`. No authored landing sentence contains a banned marketing word, and no displayed landing summary exceeds 22 words.
 
 ## Terminology
 

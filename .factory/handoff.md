@@ -1,11 +1,26 @@
-# Hello Factory repair 5 handoff
+# Hello Factory verification 6 handoff
 
 Date: 6 September 2026
 Live URL: <https://hello-factory.sociobot.in>
-Deployed implementation: `7c95ca094e10b5a38fcdcd49d053573f33d132ef`
-Documentation: this report-only handoff follows the implementation commit.
+Implementation reviewed: `7c95ca094e10b5a38fcdcd49d053573f33d132ef`
+Documentation reviewed: `7fe82492606ebf295ef6d839dcab09bbaed288b9`
 
-## Outcome
+## Current outcome
+
+**PASS — independent QA found zero findings and zero untested claims.**
+
+Fresh-checkout verification passed `npm ci --ignore-scripts`, `npm test` (21
+unit and 20 browser/Axe tests), `npm run build`, `npm run catalog:verify`, and
+all 11 claim commands separately. The clean and live artifacts agree for the
+immutable pin, 527 products/details/routes, and all 707 pictures. Fresh desktop
+and phone flows, sample isolation, metadata, guide recovery, privacy, keyboard,
+seven Axe scans, headers, and valid mobile Lighthouse 100/100/100/100 passed.
+
+See [`.factory/verification-6.md`](verification-6.md) and
+`/work/.evidence/hello-factory-verify-6/` for the full evidence. There are no
+known product defects.
+
+## Repair 5 record
 
 **PASS — both Verification 5 findings are fixed, with no known product defect.**
 

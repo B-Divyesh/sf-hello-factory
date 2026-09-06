@@ -1,4 +1,30 @@
-# Hello Factory verification 6 handoff
+# Hello Factory review 1 handoff
+
+Date: 6 September 2026
+Live URL: <https://hello-factory.sociobot.in>
+Implementation reviewed: `7c95ca094e10b5a38fcdcd49d053573f33d132ef`
+Documentation reviewed: `acc075226c1722581c9d08370af9c75ee44e46f2`
+
+## Current outcome
+
+**PASS — strict review found zero findings and zero untested public claims.**
+
+No product code changed. Fresh live desktop and phone checks confirmed the
+plain job, audience, and sample action before scrolling. The isolated sample,
+guide network recovery, keyboard focus, reduced motion, privacy behavior, and
+seven live Axe scans passed. Every declared claim command passed separately.
+
+The normal build and catalogue verifier retained the immutable source
+`a2a1712f4ead38b24a214cf207e65fcfeeb8b74a0a873c5fd4dc1d37d68721f3`:
+527 products/details/current pictures, 707 preserved pictures, and
+`imagesVerified: true`. All 527 live records and routes, all 707 pictures, and
+all 532 sitemap URLs matched or returned successfully. The deliberately
+unknown route returns a designed HTTP 404 recovery page.
+
+See [`.factory/review-1.md`](review-1.md) and
+`/work/.evidence/hello-factory-review-1/` for the review evidence.
+
+## Previous verification 6 handoff
 
 Date: 6 September 2026
 Live URL: <https://hello-factory.sociobot.in>
